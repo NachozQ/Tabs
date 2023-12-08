@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  color: black;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+}
+
+
+/* Clickable */
+
+.fa-circle-half-stroke {
+  cursor: pointer;
+  font-size: 1.7rem;
+}
