@@ -16,223 +16,65 @@
   <main>
     <div class="input">
       <div class="tuning">
-        <label for="tuning">Tuning</label>
+        <label for="tuning" class="hidden">f</label>
         <select id="tuning" name="tuning">
+          <option value="" selected hidden>Choose a tuning</option>
           <option value="standard">Standard (E A D G B e)</option>
-          <option value="halfStepUp">Half step up (E♯ A♯ D♯ G♯ B♯ E♯)</option>
-          <option value="halfStepDown">Half step down (E♭ A♭ D♭ G♭ B♭ E♭)</option>
-          <option value="wholeStepDown">Whole step down (D G C F A D)</option>
-          <option value="dropD">Drop D (D A D G B E)</option>
-          <option value="dropCSharp">Drop C♯ (C♯ G♯ C♯ F♯ A♯ D♯)</option>
-          <option value="dTuning">D Tuning (D G C F A D)</option>
+          <option value="hStepUp">Halfstep up (E# A# D# G# B# E#)</option>
+          <option value="hStepDown">Halfstep down (Eb Ab Db Gb Bb Eb)</option>
+          <option value="wStepDown">Wholestep down (D G C F A D)</option>
+          <option value="dropA">Drop A (A E A D F# B)</option>
+          <option value="dropB">Drop B (B F# B E G# C#)</option>
           <option value="dropC">Drop C (C G C F A D)</option>
-          <option value="cSharpTuning">C♯ Tuning (C♯ F♯ B E G♯ C♯)</option>
-          <option value="dropB">Drop B (B F♯ B E G♯ C♯)</option>
-          <option value="cTuning">C Tuning (C F A♯ D♯ G C)</option>
-          <option value="bStandard">B Tuning</option>
-          <option value="dropA">Drop A (A E A D F♯ B)</option>
+          <option value="dropC#">Drop C# (C# G# C# F# A# D#)</option>
+          <option value="dropD">Drop D (D A D G B E)</option>
+          <option value="openA">Open A (E A E A C# E)</option>
+          <option value="openC">Open C (C G C G C E)</option>
+          <option value="openD">Open D (D A D F# A D)</option>
+          <option value="openE">Open E (E B E G# B E)</option>
+          <option value="openF">Open F (F A C F C F)</option>
+          <option value="openG">Open G (D G D G B D)</option>
         </select>
       </div>
-      <div class="spacing">
-        <label for="spacing">Spacing</label>
-        <select id="spacing" name="spacing">
-          <option value="one">1</option>
-          <option value="two">2</option>
-        </select>
+      <div class="noteLength">
+        <input type="radio" name="notelen" id="whole" class="hidden">
+        <label for="whole">.</label>
+        <input type="radio" name="notelen" id="half" class="hidden">
+        <label for="half">.</label>
+        <input type="radio" name="notelen" id="quarter" class="hidden" checked>
+        <label for="quarter">.</label>
+        <input type="radio" name="notelen" id="eighth" class="hidden">
+        <label for="eighth">.</label>
+        <input type="radio" name="notelen" id="sixteenth" class="hidden">
+        <label for="sixteenth">.</label>
       </div>
-      <div class="shortestNote">
-        <label for="shortestNote">Shortest note</label>
-        <select id="shortestNote" name="shortestNote">
-          <option value="wholeNote">Whole note</option>
-          <option value="halfNote">Half note</option>
-          <option value="quarterNote">Quarter note</option>
-          <option value="eightNote">Eight note</option>
-          <option value="sixtenthNote">Sixtenth note</option>
-        </select>        
+      <div class="chord">
+        <input type="checkbox" id="chord" class="hidden">
+        <label class="toggle" for="chord">Chord mode</label>
+      </div>
+      <div class="technique">
+        <input type="checkbox" name="tchnq" id="pulloff" class="hidden" onclick="checkbox(this)">
+        <label for="pulloff">p</label>
+        <input type="checkbox" name="tchnq" id="hammeron" class="hidden" onclick="checkbox(this)">
+        <label for="hammeron">h</label>
+        <input type="checkbox" name="tchnq" id="deadnote" class="hidden" onclick="checkbox(this)">
+        <label for="deadnote">x</label>
+        <input type="checkbox" name="tchnq" id="slideup" class="hidden" onclick="checkbox(this)">
+        <label for="slideup">/</label>
+        <input type="checkbox" name="tchnq" id="slidedown" class="hidden" onclick="checkbox(this)">
+        <label for="slidedown">\</label>
+        <input type="checkbox" name="tchnq" id="tapping" class="hidden" onclick="checkbox(this)">
+        <label for="tapping">t</label>
       </div>
     </div>
-    <div class="guitar">
-      <table class="guitar">
-        <tr>
-          <th class="string">0</th>
-          <th>1</th>
-          <th>2</th>
-          <th>3</th>
-          <th>4</th>
-          <th>5</th>
-          <th>6</th>
-          <th>7</th>
-          <th>8</th>
-          <th>9</th>
-          <th>10</th>
-          <th>11</th>
-          <th>12</th>
-          <th>13</th>
-          <th>14</th>
-          <th>15</th>
-          <th>16</th>
-          <th>17</th>
-          <th>18</th>
-          <th>19</th>
-          <th>20</th>
-          <th>21</th>
-          <th>22</th>
-        </tr>
-        <tr>
-          <th id="first0" class="string">e</th>
-          <td id="first1"></td>
-          <td id="first2"></td>
-          <td id="first3"></td>
-          <td id="first4"></td>
-          <td id="first5"></td>
-          <td id="first6"></td>
-          <td id="first7"></td>
-          <td id="first8"></td>
-          <td id="first9"></td>
-          <td id="first10"></td>
-          <td id="first11"></td>
-          <td id="first12"></td>
-          <td id="first13"></td>
-          <td id="first14"></td>
-          <td id="first15"></td>
-          <td id="first16"></td>
-          <td id="first17"></td>
-          <td id="first18"></td>
-          <td id="first19"></td>
-          <td id="first20"></td>
-          <td id="first21"></td>
-          <td id="first22"></td>
-        </tr>
-        <tr>
-          <th id="second0" class="string">B</th>
-          <td id="second1"></td>
-          <td id="second2"></td>
-          <td id="second3"></td>
-          <td id="second4"></td>
-          <td id="second5"></td>
-          <td id="second6"></td>
-          <td id="second7"></td>
-          <td id="second8"></td>
-          <td id="second9"></td>
-          <td id="second10"></td>
-          <td id="second11"></td>
-          <td id="second12" class="dot"></td>
-          <td id="second13"></td>
-          <td id="second14"></td>
-          <td id="second15"></td>
-          <td id="second16"></td>
-          <td id="second17"></td>
-          <td id="second18"></td>
-          <td id="second19"></td>
-          <td id="second20"></td>
-          <td id="second21"></td>
-          <td id="second22"></td>
-        </tr>
-        <tr>
-          <th id="third0" class="string">G</th>
-          <td id="third1"></td>
-          <td id="third2"></td>
-          <td id="third3" class="topDot"></td>
-          <td id="third4"></td>
-          <td id="third5" class="topDot"></td>
-          <td id="third6"></td>
-          <td id="third7" class="topDot"></td>
-          <td id="third8"></td>
-          <td id="third9" class="topDot"></td>
-          <td id="third10"></td>
-          <td id="third11"></td>
-          <td id="third12"></td>
-          <td id="third13"></td>
-          <td id="third14"></td>
-          <td id="third15" class="topDot"></td>
-          <td id="third16"></td>
-          <td id="third17" class="topDot"></td>
-          <td id="third18"></td>
-          <td id="third19" class="topDot"></td>
-          <td id="third20"></td>
-          <td id="third21" class="topDot"></td>
-          <td id="third22"></td>
-        </tr>
-        <tr>
-          <th id="fourth0" class="string">D</th>
-          <td id="fourth1"></td>
-          <td id="fourth2"></td>
-          <td id="fourth3" class="bottomDot"></td>
-          <td id="fourth4"></td>
-          <td id="fourth5" class="bottomDot"></td>
-          <td id="fourth6"></td>
-          <td id="fourth7" class="bottomDot"></td>
-          <td id="fourth8"></td>
-          <td id="fourth9" class="bottomDot"></td>
-          <td id="fourth10"></td>
-          <td id="fourth11"></td>
-          <td id="fourth12"></td>
-          <td id="fourth13"></td>
-          <td id="fourth14"></td>
-          <td id="fourth15" class="bottomDot"></td>
-          <td id="fourth16"></td>
-          <td id="fourth17" class="bottomDot"></td>
-          <td id="fourth18"></td>
-          <td id="fourth19" class="bottomDot"></td>
-          <td id="fourth20"></td>
-          <td id="fourth21" class="bottomDot"></td>
-          <td id="fourth22"></td>
-        </tr>
-        <tr>
-          <th id="fifth0" class="string">A</th>
-          <td id="fifth1"></td>
-          <td id="fifth2"></td>
-          <td id="fifth3"></td>
-          <td id="fifth4"></td>
-          <td id="fifth5"></td>
-          <td id="fifth6"></td>
-          <td id="fifth7"></td>
-          <td id="fifth8"></td>
-          <td id="fifth9"></td>
-          <td id="fifth10"></td>
-          <td id="fifth11"></td>
-          <td id="fifth12" class="dot"></td>
-          <td id="fifth13"></td>
-          <td id="fifth14"></td>
-          <td id="fifth15"></td>
-          <td id="fifth16"></td>
-          <td id="fifth17"></td>
-          <td id="fifth18"></td>
-          <td id="fifth19"></td>
-          <td id="fifth20"></td>
-          <td id="fifth21"></td>
-          <td id="fifth22"></td>
-        </tr>
-        <tr>
-          <th id="sixth0" class="string">E</th>
-          <td id="sixth1"></td>
-          <td id="sixth2"></td>
-          <td id="sixth3"></td>
-          <td id="sixth4"></td>
-          <td id="sixth5"></td>
-          <td id="sixth6"></td>
-          <td id="sixth7"></td>
-          <td id="sixth8"></td>
-          <td id="sixth9"></td>
-          <td id="sixth10"></td>
-          <td id="sixth11"></td>
-          <td id="sixth12"></td>
-          <td id="sixth13"></td>
-          <td id="sixth14"></td>
-          <td id="sixth15"></td>
-          <td id="sixth16"></td>
-          <td id="sixth17"></td>
-          <td id="sixth18"></td>
-          <td id="sixth19"></td>
-          <td id="sixth20"></td>
-          <td id="sixth21"></td>
-          <td id="sixth22"></td>
-        </tr>
-      </table>
-    </div>
-    <div class="output">
+    <div class="fretboard topmargin"><!-- Fretboard table --></div> 
+    <div class="output"><article class="tabBox"><!-- Tab text --></article></div>
+    <div class="copy">
+      <input type="button" value="Copy tab text" onclick="clipboard()">
     </div>
   </main>
-<script src="script.js"></script>
+<script src="Scripts/fretboard.js"></script>
+<script src="Scripts/functions.js"></script>
+<script src="Scripts/script.js"></script>
 </body>
 </html>
