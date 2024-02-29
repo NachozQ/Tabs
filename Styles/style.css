@@ -1,0 +1,144 @@
+/* Variables */
+
+:root {
+  --font-color: #000;
+  --bg-color: #fff;
+  --image-invert: invert(1);
+  --light-color: hsl(118, 31%, 80%);
+  --dark-color: hsl(118, 24%, 24%);
+  --light-alpha-color: hsla(118, 24%, 34%, 0.75);
+  --dark-alpha-color: hsla(118, 24%, 24%, 0.75);
+  --border: hsl(118, 24%, 24%);
+}
+
+/* Global styles */
+/* Reset and base styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  color: var(--font-color);
+}
+
+svg {
+  fill: var(--font-color);
+}
+
+h1, th, .input {
+  -webkit-user-select: none;
+  user-select: none;
+  font-family: system-ui, Roboto;
+}
+
+/* utility classes */
+
+.hidden {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  overflow: hidden;
+  z-index: -9999999;
+  opacity: 0;
+}
+
+.align-bottom {
+  display: grid;
+  align-content: end;
+}
+
+.align-top {
+  display: grid;
+  align-content: start;
+}
+
+.align-center {
+  display: grid;
+  align-content: center;
+}
+
+.selected {  
+  background-color: var(--dark-color);
+  color: var(--bg-color);
+  &:hover {
+    background-color: var(--dark-alpha-color);
+  }
+}
+
+.note.selected {
+  animation: blink-select 1.4s infinite;
+}
+
+.txtString > .note:hover {
+  cursor: pointer;
+  font-weight: 900;
+  background-color: var(--light-color);
+}
+
+.sixth > .note, .sixth > .rest {
+  position: relative;
+}
+
+.sixth > .note::after, .sixth > .rest::after {
+  content: "";
+  display: block;
+  height: 15px;
+  width: 15px;
+  background-size: contain;
+  position: absolute;
+  left: 100%;
+  transform: translateX(-100%);
+  background-repeat: no-repeat;
+}
+
+.txtString > .note::after {
+  pointer-events: none;
+}
+
+.sixth > .note.whole::after { background-image: url(../Images/WholeNote.png);}
+.sixth > .note.half::after { background-image: url(../Images/HalfNote.png);}
+.sixth > .note.quarter::after { background-image: url(../Images/QuarterNote.png);}
+.sixth > .note.eighth::after { background-image: url(../Images/EighthNote.png);}
+.sixth > .note.sixteenth::after { background-image: url(../Images/SixteenthNote.png);}
+
+.sixth > .rest.whole::after { background-image: url(../Images/WholeRest.png);}
+.sixth > .rest.half::after { background-image: url(../Images/HalfRest.png);}
+.sixth > .rest.quarter::after { background-image: url(../Images/QuarterRest.png);}
+.sixth > .rest.eighth::after { background-image: url(../Images/EighthRest.png);}
+.sixth > .rest.sixteenth::after { background-image: url(../Images/SixteenthRest.png);}
+
+.sixth > .note::after, .sixth > .rest::after { bottom: -15px;}
+
+/* Animations */
+
+/* Caret */
+@keyframes blink-caret {
+  0% {
+    opacity: 1; /* Fully visible */
+  }
+  50% {
+    opacity: 0; /* Invisible */
+  }
+  100% {
+    opacity: 1; /* Fully visible again */
+  }
+}
+
+/* Selected */
+@keyframes blink-select {
+  0% {
+    background-color: var(--bg-color);
+    color: var(--font-color);
+  }
+  50% {
+    background-color: var(--dark-color);
+    color: var(--bg-color);
+  }
+  100% {
+    background-color: var(--dark-color);
+    color: var(--bg-color);
+  }
+}

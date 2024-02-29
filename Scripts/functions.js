@@ -2,7 +2,8 @@ function tabBar() {
   for (let i = 0; i < 6; i++) {
     spanEl = document.createElement("span")
     brEl = document.createElement("br")
-    spanEl.className = "txtString"
+    const stringCount = ["first", "second", "third", "fourth", "fifth", "sixth"]
+    spanEl.className = "txtString " + stringCount[i]
     tabBoxEl.append(spanEl, brEl)
   };
   startTab()
@@ -52,71 +53,89 @@ function startTab() { // Starts the tab strings and lines and dashes
   }
 }
 
-function sep(note) {
-  if (note <= 9) {
-    var ending = Space(1) + note
-  } else {
-    var ending = "-" + note
-  } 
+function writeNote(note) {
+  let spaceEl = document.createElement("span")
+  spaceEl.innerText = Space(note.toString())
+  let noteEl = document.createElement("span")
+  noteEl.classList.add(selectedNoteLen(), "note")
+  noteEl.innerText = note
+  noteEl.onclick = () => { noteSelection(noteEl) }
   tchnqArr.forEach(element => {
-    if (element.checked) {
-      if (note <= 9 && element.id != "deadnote") {
-        ending = "-"
-      } else {
-        ending = ""
-      }
+    if (element.checked && note != "-") {
+      ending = ""
       switch (element.id) {
         case "pulloff":
-          ending += "p" + note
-          break;
+          spaceEl.innerText = Space("p" + note)
+          noteEl.innerText = "p" + note
+        break;
         case "hammeron":
-          ending += "h" + note
-          break;
+          spaceEl.innerText = Space("h" + note)
+          noteEl.innerText = "h" + note
+        break;
         case "deadnote":
-          ending +=  Space(1) + "x"
-          break;
+          spaceEl.innerText = Space("x")
+          noteEl.innerText = "x"
+        break;
         case "slideup":
-          ending += "/" + note
-          break;
+          spaceEl.innerText = Space("/" + note)
+          noteEl.innerText = "/" + note
+        break;
         case "slidedown":
-          ending += "\\" + note
-          break;
+          spaceEl.innerText = Space("\\" + note)
+          noteEl.innerText = "\\" + note
+        break;
         case "tapping":
-          ending += "t" + note
-          break;
+          spaceEl.innerText = Space("x" + note)
+          noteEl.innerText = "t" + note
+        break;
       }
     }
   });
-  return ending
+  return [spaceEl, noteEl]
 }
 
 function writeTab(notes) { // Writes notes
-  if (chord) { // Chord
-    const isOnlyNull = (arr) => arr.every((element) => element === null);
-    if (!isOnlyNull(notes)) { // If notes empty
-      for (let i = 0; i < 6; i++) {
-        if (notes[i] == null) { // No notes
-          currentStrings()[i].textContent += Space(1) + "-"
-        } else {
-          currentStrings()[i].textContent += sep(notes[i])
-        }
-      };
-      // Counts how many beats for measure
-      if (wholeEl.checked) {
-        beats += 16
-      } else if (halfEl.checked) {
-        beats += 8
-      } else if (quarterEl.checked) {
-        beats += 4
-      } else if (eighthEl.checked) {
-        beats += 2
-      } else if (sixteenthEl.checked) {
-        beats += 1
+  if (!isOnlyNull(notes)) { // If notes empty
+    tabNoteArr.push([])
+    for (let i = 0; i < 6; i++) {
+      if (notes[i] == null) { // No notes
+        let noteArr = writeNote("-")
+        tabNoteArr[tabNoteArr.length - 1].push(noteArr[1])
+        noteArr[0].classList.add("i" + (tabNoteArr.length - 1))
+        noteArr[1].classList.add("i" + (tabNoteArr.length - 1))
+        currentStrings()[i].append(noteArr[0], noteArr[1])
+      } else {
+        let noteArr = writeNote(notes[i])
+        tabNoteArr[tabNoteArr.length - 1].push(noteArr[1])
+        noteArr[0].classList.add("i" + (tabNoteArr.length - 1))
+        noteArr[1].classList.add("i" + (tabNoteArr.length - 1))
+        currentStrings()[i].append(noteArr[0], noteArr[1])
       }
-      if (beats == 16) {
-        endTab()
-      }
-    }
+    };
+  } else {
+    tabNoteArr.push(NaN)
+    for (let i = 0; i < 6; i++) {
+      let noteArr = writeNote("-")
+      noteArr[1].classList.add("rest")
+      noteArr[1].classList.remove("note")
+      noteArr[1].classList.add("i" + (tabNoteArr.length - 1))
+      currentStrings()[i].append(noteArr[0], noteArr[1])
+    };
+  }
+  // Counts how many beats for measure
+  if (wholeEl.checked) {
+    tabNoteLen.push(16)
+  } else if (halfEl.checked) {
+    tabNoteLen.push(8)
+  } else if (quarterEl.checked) {
+    tabNoteLen.push(4)
+  } else if (eighthEl.checked) {
+    tabNoteLen.push(2)
+  } else if (sixteenthEl.checked) {
+    tabNoteLen.push(1)
+  }
+  if (beats == 16) {
+    endTab()
   }
   // Unchecks
   tchnqArr.forEach(element => {
@@ -126,15 +145,13 @@ function writeTab(notes) { // Writes notes
 
 function endTab() {
   for (let i = 0; i < 6; i++) {
-    currentStrings()[i].textContent += Space(1) + "|"
+    currentStrings()[i].innerHTML += "|"
   };
   beats = 0
 }
 
 function deleteTab() {
-  currentStrings().forEach(element => {
-    element.textContent = element.textContent.slice(0, -2)
-  });
+  // Will delete selected note/ noteline, if none are selected delete last noteline
 }
 
 function checkbox(checkbox) { // Allows only one checkbox to be checked
@@ -144,29 +161,53 @@ function checkbox(checkbox) { // Allows only one checkbox to be checked
   })
 }
 
-function Space(amount) { // 
+function Space(note) { // 
   let space = ""
-  for (let i = 0; i < amount; i++) {
-    space += "--"
-  };
+  if (note.length == 1) {
+    space = "--"
+  } else if (note.length == 2) {
+    space = "-"
+  } else if (note.length == 3) {
+    space = ""
+  } 
   return space
 }
 
-function selected() {
-  currentStrings().forEach((element, index) => {
-    if (element.textContent.substr(-2, 1) == "-") {
-      if (parseInt(element.textContent.substr(-1)) <= 9) {
-        arrayArr[index][element.textContent.substr(-1)].classList.add("selected")
-      } else if (element.textContent.substr(-1) == "x") {
-        arrayArr[index][0].classList.add("selected")
-      }
-    } else if (parseInt(element.textContent.substr(-2)) > 9) {
-      arrayArr[index][element.textContent.substr(-2)].classList.add("selected")
-    }
-  });
+function selectedNoteLen() {
+  if (wholeEl.checked) {
+    return "whole"
+  } else if (halfEl.checked) {
+    return "half"
+  } else if (quarterEl.checked) {
+    return "quarter"
+  } else if (eighthEl.checked) {
+    return "eighth"
+  } else if (sixteenthEl.checked) {
+    return "sixteenth"
+  }
 }
 
-function clearSelection() {
+function noteSelection(el) {
+  if (!shift) {
+    let arr =  document.querySelectorAll(".selected")
+    arr.forEach(element => {
+      element.classList.remove("selected")
+    });
+  }
+  el.classList.add("selected")
+  console.log(el);
+}
+
+function chordSelection(chord) {  // Selects chord notes while writing it
+  fretboardClearSelection()
+  for (let i = 0; i < chord.length; i++) {
+    if (chord[i] != null) {
+      arrayArr[i][chord[i]].classList.add("selected")
+    }
+  };
+}
+
+function fretboardClearSelection() {  // Unselects all
   arrayArr.forEach((stringArr) => {
     stringArr.forEach((element) => {
       element.classList.remove("selected");
@@ -190,47 +231,56 @@ function clipboard() {
   navigator.clipboard.writeText(temptext.value)
 }
 
+function isOnlyNull(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] !== null) {
+      return false
+    } 
+  };
+  return true
+}
+
+function togglePlay(el) {
+  if (el.classList.contains("fa-play")) {
+    el.classList.add("fa-pause");
+    el.classList.remove("fa-play")
+  } else {
+    el.classList.add("fa-play")
+    el.classList.remove("fa-pause");
+  }
+}
+
 function theme(name) {
   switch (name) {
     case "dark":
       rootEl.style.setProperty("--font-color", "#fff");
       rootEl.style.setProperty("--bg-color", "#000");
+      rootEl.style.setProperty("--image-invert", "invert(1)");
       rootEl.style.setProperty("--light-color", "hsl(0, 31%, 80%)");
       rootEl.style.setProperty("--dark-color", "hsl(0, 45%, 40%)");
       rootEl.style.setProperty("--light-alpha-color", "hsla(0, 24%, 50%, 0.75)");
       rootEl.style.setProperty("--dark-alpha-color", "hsla(0, 39%, 40%, 0.75)");
       rootEl.style.setProperty("--border", "hsl(0, 24%, 24%)");
-      rootEl.style.setProperty("--image-color", "invert(100%)");
-      rootEl.style.setProperty("--image", "invert(1)");
-      rootEl.style.setProperty("--image-invert", "invert(1)");
       break;
     case "light":
       rootEl.style.setProperty("--font-color", "#000");
       rootEl.style.setProperty("--bg-color", "#fff");
+      rootEl.style.setProperty("--image-invert", "invert(0)");
       rootEl.style.setProperty("--light-color", "hsl(118, 31%, 85%)");
       rootEl.style.setProperty("--dark-color", "hsl(118, 31%, 76%)");
       rootEl.style.setProperty("--light-alpha-color", "hsla(118, 24%, 34%, 0.75)");
       rootEl.style.setProperty("--dark-alpha-color", "hsla(118, 24%, 24%, 0.75)");
       rootEl.style.setProperty("--border", "hsl(118, 24%, 24%)");
-      rootEl.style.setProperty("--image-color", "invert(0%)");
-      rootEl.style.setProperty("--bg-image", "url('Images/Dot.png')");
-      rootEl.style.setProperty("--bg-top-image", "url('Images/TopDot.png')");
-      rootEl.style.setProperty("--image", "invert(0)");
-      rootEl.style.setProperty("--image-invert", "invert(0)");
       break;
     case "mintchoco":
       rootEl.style.setProperty("--font-color", "hsl(30, 33%, 37%)");
       rootEl.style.setProperty("--bg-color", "hsl(89, 70%, 85%)");
+      rootEl.style.setProperty("--image-invert", "invert(1)");
       rootEl.style.setProperty("--light-color", "hsl(118, 51%, 70%)");
       rootEl.style.setProperty("--dark-color", "hsl(118, 31%, 66%)");
       rootEl.style.setProperty("--light-alpha-color", "hsla(118, 24%, 54%, 0.75)");
       rootEl.style.setProperty("--dark-alpha-color", "hsla(118, 24%, 44%, 0.75)");
       rootEl.style.setProperty("--border", "hsl(118, 24%, 24%)");
-      rootEl.style.setProperty("--image-color", "invert(0%)");
-      rootEl.style.setProperty("--bg-image", "url('Images/Dot.png')");
-      rootEl.style.setProperty("--bg-top-image", "url('Images/TopDot.png')");
-      rootEl.style.setProperty("--image", "invert(0)");
-      rootEl.style.setProperty("--image-invert", "invert(1)");
       break;
   }
 }

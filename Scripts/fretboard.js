@@ -57,9 +57,9 @@ for (var i = 0; i < 7; i++) {
           svgEl.setAttribute("viewBox", "0 0 100 100")
           circleEl.setAttribute("cx", "50")
           circleEl.setAttribute("cy", "50")
-          circleEl.setAttribute("r", "50")
+          circleEl.setAttribute("r", "40")
           svgEl.append(circleEl)
-          td.classList.add("content-center")
+          td.classList.add("align-center")
           td.append(svgEl)
         } else if (i==3 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
           const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -67,9 +67,9 @@ for (var i = 0; i < 7; i++) {
           svgEl.setAttribute("viewBox", "0 0 100 100")
           circleEl.setAttribute("cx", "50")
           circleEl.setAttribute("cy", "100")
-          circleEl.setAttribute("r", "50")
+          circleEl.setAttribute("r", "40")
           svgEl.append(circleEl)
-          td.classList.add("content-bottom")
+          td.classList.add("align-bottom")
           td.append(svgEl)
         } else if (i==4 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
           const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -77,9 +77,9 @@ for (var i = 0; i < 7; i++) {
           svgEl.setAttribute("viewBox", "0 0 100 100")
           circleEl.setAttribute("cx", "50")
           circleEl.setAttribute("cy", "0")
-          circleEl.setAttribute("r", "50")
+          circleEl.setAttribute("r", "40")
           svgEl.append(circleEl)
-          td.classList.add("content-top")
+          td.classList.add("align-top")
           td.append(svgEl)
         }
         var element = td
@@ -116,11 +116,12 @@ arrayArr.forEach((stringArr, stringIndex) => {
     element.addEventListener("click", () => {
       if (chordEl.checked) {
         notes.splice(stringIndex, 1, index);
+        chordSelection(notes)
       } else {
         notes.splice(stringIndex, 1, index);
         writeTab(notes);
-        clearSelection();
-        selected();
+        fretboardClearSelection();
+        element.classList.add("selected");
         notes = [null, null, null, null, null, null]
       }
     });

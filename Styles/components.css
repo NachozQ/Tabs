@@ -1,0 +1,251 @@
+body {
+  display: grid;
+  grid-template: 
+  "head" 10vh
+  "main" 90vh / 1fr;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+}
+
+/* HEADER styles */
+
+header {
+  grid-area: "head";
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.fa-solid {
+  cursor: pointer;
+  font-size: 1.7rem;
+}
+
+/* MAIN styles */
+
+main {
+  grid-area: "main";
+  display: grid;
+  grid-template: 
+  "input" min-content
+  "fretboard" min-content
+  "output" min-content
+  "copy" min-content / 1fr;
+  row-gap: 10px;
+}
+
+/* Input div */
+
+select {
+  background-color: var(--font-color);
+  color: var(--bg-color);
+  border: 1px var(--border) solid;
+  text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 5px;
+  & > option:nth-of-type(n+1) {
+    text-align: start;
+  }
+}
+
+input[type="button"] {
+  background-color: var(--bg-bottom-image);
+  border-color: var(--font-color);
+  color: var(--border);
+  border: 2px var(--border) solid;
+  padding: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--light-color);
+  }
+}
+
+.input {
+  grid-area: "input";
+  display: grid;
+  -webkit-user-select: none;
+  user-select: none;
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  gap: 10px 5px;
+  margin: 10px;
+  transition: all 0.5s;
+  & > div > * {
+    cursor: pointer;
+  }
+}
+
+.playback {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-self: center;
+  align-items: center;
+}
+
+.playback > .toggle {
+  padding: 5px;
+}
+
+.playback > #bpm {
+  outline: none;
+  border: none;
+  background-color: var(--font-color);
+  color: var(--bg-color);
+  padding: 10px;
+  width: 6ch;
+  text-align: center;
+  height: 18px;
+}
+
+#bpm::-webkit-outer-spin-button, #bpm::-webkit-inner-spin-button  { display: none;}
+
+.playback > #bpm::before {
+  position: relative;
+  content: "";
+  display: block;
+  height: 30px;
+  width: 30px;
+  margin: 30px;
+  background-color: red;
+  background-image: url(../Images/QuarterNote.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.noteLength {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  grid-area: "notelen";
+  gap: 5px;
+  & > label {
+    height: 30px;
+    width: 30px;
+    color: transparent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 2px var(--font-color) solid;
+    filter: var(--image);
+    grid-area: "notelen";
+    &:hover {
+      background-color: var(--dark-alpha-color);
+    }
+  }
+}
+
+.noteLength > input:checked + label {
+  filter: var(--image);
+  border: 2px var(--border) solid !important;
+  z-index: 1;
+  background-color: var(--light-alpha-color);
+}
+
+.chord > .toggle {
+  border: 1px var(--font-color) solid;
+  padding: 5px;
+}
+
+.chord > input:checked + label, .technique > input:checked + label {
+  background-color: var(--font-color);
+  color: var(--bg-color);
+  outline: 1px var(--border) solid;
+}
+
+.technique {
+  justify-self: end;
+  & > label {
+    outline: 1px var(--font-color) solid;
+    padding: 5px;
+    font-family: monospace;
+    &:hover {
+      background-color: var(--dark-color);
+    }
+  }
+}
+
+/* Fretboard div */
+
+.fretboard {
+  grid-area: "fretboard";
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  border-spacing: 0px;
+}
+
+th {
+  text-align: center;
+  min-width: 3.6vw;
+  height: 3.6vw !important;
+  font-size: 2vw;
+}
+
+td {
+  border: 1px var(--font-color) solid;
+  min-width: 3.6vw;
+  height: 3.6vw;
+}
+
+tr:nth-child(n+2)>th {
+  border: 1px var(--font-color) solid;
+  border-right: 5px var(--font-color) solid;
+  border-left: none;
+}
+
+tr:nth-child(n+2)>th:hover, td:hover {
+  background-color: var(--light-color);
+}
+
+/* Output div */
+
+.output {
+  grid-area: "output";
+  padding: 10px;
+  display: inline-flex;
+  white-space: nowrap;
+  overflow: auto;
+  border: 2px var(--font-color) solid;
+  max-height: 40vh;
+  width: 90%;
+  align-self: center;
+  justify-self: center;
+  font-family: monospace;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.tabBox {
+  margin-bottom: 15px;
+}
+
+/* Copy */
+
+#copy {
+  align-self: center;
+  justify-self: center;
+}
+
+/* Testing */
+
+.txtString {
+  position: relative;
+}
+
+.txtString::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 2px; /* Adjust the width as needed */
+  height: 100%;
+  background-color: var(--dark-alpha-color);
+  pointer-events: none; 
+  animation: blink-caret 0.7s infinite;
+}

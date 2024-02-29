@@ -37,9 +37,6 @@ let noteArr = []
 let themeIndex = 0
 // Shift toggle
 var shift = false
-// Compiling
-let tabNoteLen = []
-let tabNoteArr = []
 
 // Listener for mode
 modeEl.addEventListener("click", () => { // Dark mode
