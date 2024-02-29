@@ -3,7 +3,8 @@
 :root {
   --font-color: #000;
   --bg-color: #fff;
-  --image-invert: invert(1);
+  --bg-img: none;
+  --bg-animation: none;
   --light-color: hsl(118, 31%, 80%);
   --dark-color: hsl(118, 24%, 24%);
   --light-alpha-color: hsla(118, 24%, 34%, 0.75);
@@ -141,4 +142,9 @@ h1, th, .input {
     background-color: var(--dark-color);
     color: var(--bg-color);
   }
+}
+
+@keyframes background-scroll {
+  from {background-position: 0% 0;}
+  to {background-position: 200% 0;}
 }

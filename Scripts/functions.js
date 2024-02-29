@@ -255,6 +255,8 @@ function theme(name) {
     case "dark":
       rootEl.style.setProperty("--font-color", "#fff");
       rootEl.style.setProperty("--bg-color", "#000");
+      rootEl.style.setProperty("--bg-img", "none");
+      rootEl.style.setProperty("--bg-animation", "none");
       rootEl.style.setProperty("--image-invert", "invert(1)");
       rootEl.style.setProperty("--light-color", "hsl(0, 31%, 80%)");
       rootEl.style.setProperty("--dark-color", "hsl(0, 45%, 40%)");
@@ -265,6 +267,8 @@ function theme(name) {
     case "light":
       rootEl.style.setProperty("--font-color", "#000");
       rootEl.style.setProperty("--bg-color", "#fff");
+      rootEl.style.setProperty("--bg-img", "none");
+      rootEl.style.setProperty("--bg-animation", "none");
       rootEl.style.setProperty("--image-invert", "invert(0)");
       rootEl.style.setProperty("--light-color", "hsl(118, 31%, 85%)");
       rootEl.style.setProperty("--dark-color", "hsl(118, 31%, 76%)");
@@ -275,6 +279,8 @@ function theme(name) {
     case "mintchoco":
       rootEl.style.setProperty("--font-color", "hsl(30, 33%, 37%)");
       rootEl.style.setProperty("--bg-color", "hsl(89, 70%, 85%)");
+      rootEl.style.setProperty("--bg-img", "none");
+      rootEl.style.setProperty("--bg-animation", "none");
       rootEl.style.setProperty("--image-invert", "invert(1)");
       rootEl.style.setProperty("--light-color", "hsl(118, 51%, 70%)");
       rootEl.style.setProperty("--dark-color", "hsl(118, 31%, 66%)");
@@ -282,5 +288,15 @@ function theme(name) {
       rootEl.style.setProperty("--dark-alpha-color", "hsla(118, 24%, 44%, 0.75)");
       rootEl.style.setProperty("--border", "hsl(118, 24%, 24%)");
       break;
+    case "rainbow":
+      rootEl.style.setProperty("--font-color", "#000");
+      rootEl.style.setProperty("--bg-color", "#fff");
+      rootEl.style.setProperty("--bg-img", "repeating-linear-gradient(90deg, #f4b1c4, #f2b98b, #bbd36b, #6eddc9, #9acef3, #cebbf3, #f4b1c4)");
+      rootEl.style.setProperty("--bg-animation", "background-scroll 16s linear infinite");
+      rootEl.style.setProperty("--light-color", "hsl(0, 50%, 79%)");
+      rootEl.style.setProperty("--dark-color", "hsl(0, 50%, 79%)");
+      rootEl.style.setProperty("--light-alpha-color", "hsla(0, 30%, 79%, 0.75)");
+      rootEl.style.setProperty("--dark-alpha-color", "hsla(0, 30%, 79%, 0.75)");
+      rootEl.style.setProperty("--border", "hsl(118, 24%, 24%)");
   }
 }

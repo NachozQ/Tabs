@@ -50,6 +50,9 @@ modeEl.addEventListener("click", () => { // Dark mode
     theme("mintchoco")
     themeIndex++
   } else if (themeIndex === 2) {
+    theme("rainbow")
+    themeIndex++
+  } else if (themeIndex === 3) {
     theme("light")
     themeIndex = 0
   }
