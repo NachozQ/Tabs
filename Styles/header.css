@@ -1,0 +1,207 @@
+header {
+  grid-area: "head";
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+
+  .settings {
+    display: flex;
+    column-gap: 1.5em;
+
+    svg {
+      height: 2rem;
+      fill: var(--font-color);
+
+      &:hover {
+        fill: var(--light-color);
+        transform: scale(1.1);
+        transition: ease-in-out 0.5s;
+      }
+    }
+  }
+}
+
+/* Repeating styling */
+
+.settings > svg, 
+input[type="button"], 
+.input > div > * {  
+  cursor: pointer; 
+}
+
+.chord > input:checked + label,
+.noteLength > input:checked + label,
+.technique > input:checked + label {
+  border: 2px var(--border) solid !important;
+}
+
+header, 
+.input, 
+.playback, 
+.noteLength {
+  align-items: center;
+}
+
+.technique > label, 
+.noteLength > label, 
+.chord > label {
+  &:hover {
+    transform: scale(1.05);
+    background-color: var(--dark-alpha-color);
+  }
+}
+
+/* Input div */
+
+select {
+  background-color: var(--font-color);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 5px;
+
+  * {
+    background-color: var(--font-color);
+    color: var(--bg-color);
+  }
+
+  &:focus {  outline: none; }
+}
+
+input[type="button"] {
+  border-color: var(--font-color);
+  color: var(--border);
+  padding: 5px;
+  &:hover {  background-color: var(--light-alpha-color); }
+}
+
+.input {
+  display: grid;
+  grid-area: "input";
+  -webkit-user-select: none;
+  user-select: none;
+  grid-template:
+  "tuning capo notelen" 1fr
+  "chord play tech" 1fr / 1fr 1fr 1fr;
+  gap: 10px 5px;
+  margin: 10px;
+  transition: all 0.5s;
+
+  .tuning, .chord { justify-self: start; }
+  .playback { justify-self: center; }
+  .noteLength, .technique { justify-self: end; }
+
+  @media (max-width: 600px) {
+    grid-template:
+    "tuning capo" 1fr
+    "play notelen" 1fr
+    "chord tech" 1fr / 1fr 1fr;
+    .playback { justify-self: start; }
+    .capo { justify-self: end; }
+    @media (max-width: 400px) {
+      row-gap: 9px;
+      grid-template:
+      "tuning" 1fr
+      "capo" 1fr
+      "tech" 1fr
+      "notelen" 1fr
+      "chord"
+      "play" 1fr / 1fr;
+      .tuning, .noteLength, .playback, .chord, .technique, .capo {
+        width: 100%;
+        justify-self: start;
+      }
+    }
+  }
+}
+
+.tuning {
+  grid-area: "tuning";
+}
+
+.playback {
+  display: flex;
+  grid-area: play;
+  padding-left: 15px;
+  gap: 1rem;
+
+  #bpm {
+    outline: none;
+    border: none;
+    background-color: var(--font-color);
+    width: 6ch;
+    text-align: center;
+    height: 1.2rem;
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {  display: none; }
+  }
+
+  svg {
+    height: 0.9rem;
+    width: 15px;
+  }
+}
+
+.noteLength {
+  display: flex;
+  grid-area: notelen;
+  gap: 3px 6px;
+
+  label {
+    color: transparent;
+    height: 30px;
+    width: 30px;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+.noteLength > input:checked + label {
+  background-color: var(--light-alpha-color);
+  z-index: 1;
+
+  svg {  fill: var(--bg-color); }
+}
+
+.capo {
+  grid-area: capo;
+  justify-self: center;
+
+  #capo {
+    outline: none;
+    border: none;
+    background-color: var(--font-color);
+    width: 4ch;
+    text-align: center;
+    height: 18px;
+
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {  display: none; }
+  }
+}
+
+.chord { 
+  grid-area: chord;
+
+  .toggle {
+    padding: 5px;
+  }
+}
+
+.chord > input:checked + label, 
+.technique > input:checked + label {
+  background-color: var(--light-alpha-color);
+  color: var(--bg-color);
+}
+
+.technique {
+  display: flex;
+  grid-area: tech;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 3px 6px;
+  grid-auto-rows: auto;
+
+  label {
+    justify-self: center;
+    border: 2px var(--font-color) solid;
+    padding: 2px 5px;
+  }
+}

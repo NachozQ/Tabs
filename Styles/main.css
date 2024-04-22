@@ -1,0 +1,140 @@
+/* Fretboard div */
+.fretboard {
+  grid-area: "fretboard";
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  border-spacing: 0px;
+}
+
+th {
+  text-align: center;
+  min-width: 3.6vw;
+  height: 3.6vw !important;
+  font-size: 2vw;
+}
+
+td {
+  position: relative;
+  border: 1px var(--font-color) solid;
+  min-width: 3.6vw;
+  height: 3.6vw;
+
+  p {
+    position: absolute;
+    color: var(--font-color) !important;
+    font-size: clamp(0.9rem, 2vw, 1.5rem);   
+    text-align: center;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+  }
+
+  &:not(.align-bottom, .align-top) > p {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+tr:nth-child(n+2) > th {
+  border: 1px var(--font-color) solid;
+  border-right: 5px var(--font-color) solid;
+  border-left: none;
+}
+
+tr:nth-child(n+2) > th:hover, td:hover {
+  background-color: var(--light-color);
+}
+
+.selected {
+  background-color: var(--dark-color);
+  color: var(--bg-color);
+
+  &:hover {
+    background-color: var(--dark-alpha-color);
+  }
+}
+
+.txtString > .note:hover, .txtString > .rest:hover {
+  cursor: pointer;
+  font-weight: 900;
+  background-color: var(--light-color);
+}
+
+.note.selected, .rest.selected {  animation: blink-select 1.4s infinite; }
+.txtString > span:not(.note):not(.rest) {  color: #888; }
+.sixth > .note, .sixth > .rest {  position: relative; }
+
+.sixth > .note::after, .sixth > .rest::after {
+  content: "";
+  display: block;
+  height: 15px;
+  width: 15px;
+  background-size: contain;
+  position: absolute;
+  left: 100%;
+  transform: translateX(-100%);
+  background-repeat: no-repeat;
+  filter: invert(var(--img-filter));
+  bottom: -15px;
+}
+
+/* Notes */
+.sixth > .note.whole::after { background-image: url(../Images/WholeNote.png);}
+.sixth > .note.half::after { background-image: url(../Images/HalfNote.png);}
+.sixth > .note.quarter::after { background-image: url(../Images/QuarterNote.png);}
+.sixth > .note.eighth::after { background-image: url(../Images/EighthNote.png);}
+.sixth > .note.sixteenth::after { background-image: url(../Images/SixteenthNote.png);}
+/* Rests */
+.sixth > .rest.whole::after { background-image: url(../Images/WholeRest.png);}
+.sixth > .rest.half::after { background-image: url(../Images/HalfRest.png);}
+.sixth > .rest.quarter::after { background-image: url(../Images/QuarterRest.png);}
+.sixth > .rest.eighth::after { background-image: url(../Images/EighthRest.png);}
+.sixth > .rest.sixteenth::after { background-image: url(../Images/SixteenthRest.png);}
+
+/* Output div */
+.output {
+  grid-area: "output";
+  padding: 10px;
+  display: inline-flex;
+  white-space: nowrap;
+  overflow: auto;
+  border: 2px var(--font-color) solid;
+  max-height: 40vh;
+  width: 90%;
+  align-self: center;
+  justify-self: center;
+  font-family: monospace;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.tabBox {
+  margin-bottom: 15px;
+  line-height: 1em;
+}
+
+.txtString {
+  position: relative;
+
+  .note::after {  pointer-events: none; }
+}
+
+.txtString:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 2px;
+  height: 100%;
+  pointer-events: none; 
+  animation: blink-caret 0.7s infinite;
+}
+
+/* Copy */
+#copy {
+  align-self: center;
+  justify-self: center;
+}
