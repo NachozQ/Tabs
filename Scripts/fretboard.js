@@ -1,10 +1,108 @@
-let fretdivEl = document.querySelector(".fretboard");
-// Create table element
-var table = document.createElement("table");
-table.classList.add("guitar");
-let firstEl = []; let secondEl = []; let thirdEl = []; let fourthEl = []; let fifthEl = []; let sixthEl = []
-const arrayArr = [firstEl, secondEl, thirdEl, fourthEl, fifthEl, sixthEl];
+var arrayArr = [[], [], [], [], [], []];
 
+// Creation of fretboard
+function buildFretboard(instrument) {
+  // Create table element
+  fretdivEl.textContent = ""
+  var table = document.createElement("table");
+  table.className = "instrument";
+  if (instrument == "guitar") {
+    stringCount = 6
+    arrayArr = [[], [], [], [], [], []];
+  } else if (instrument == "ukulele" || instrument == "bass") {
+    stringCount = 4
+    arrayArr = [[], [], [], []];
+  }
+  for (var i = 0; i < stringCount+1; i++) {
+    let numberNames = ["first", "second", "third", "fourth", "fifth", "sixth"];
+    for (let l = 0; l < stringCount; l++) {
+      if (i == l+1) {
+        var stringname = numberNames[l];
+      }
+    };
+
+    var row = table.insertRow(i);
+    for (let j = 0; j < 23; j++) {
+      if (i === 0) {  // Table numbers, create th element for the first row
+        var th = document.createElement("th");
+        th.innerText = j;
+        row.appendChild(th);
+      } else {  // Frets
+        if (j === 0) {  // Create th element for the first column
+          var th = document.createElement("th");
+          th.id = stringname + j;
+          th.className = "string";
+          row.appendChild(th);
+          var element = th
+        } else {  // Create td element for other cells
+          let pEl = document.createElement("p")
+          var td = document.createElement("td");
+          td.id = stringname + j;
+          row.appendChild(td);
+          td.append(pEl)
+          if (stringCount == 6) {
+            if ((i==2 && j==12) || (i==5 && j==12)) {
+              fretboardSVG(td, 50, "center", "0 0 100 100")
+            } else if (i==3 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
+              fretboardSVG(td, 100, "bottom", "0 49 100 50")
+            } else if (i==4 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
+              fretboardSVG(td, 0, "top", "0 1 100 50")
+            }
+          } else if (stringCount == 4) {
+            if (
+              i==2 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21) ||
+              i==1 && (j==12) ||
+              i==3 && (j==12)) {
+              fretboardSVG(td, 100, "bottom", "0 49 100 50")
+            } else if (
+              i==3 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21) ||
+              i==2 && (j==12) ||
+              i==4 && (j==12)) {
+              fretboardSVG(td, 0, "top", "0 1 100 50")
+            }
+          }
+          var element = td
+        }
+        // Push frets to string array
+        for (let k = 0; k <= stringCount; k++) {
+          if (i == k) {
+            arrayArr[i-1].push(element)
+          }
+        };
+      }
+    }
+  }
+  arrayArr.forEach((stringArr, stringIndex) => {
+    stringArr.forEach((element, index) => {
+      element.addEventListener("click", () => {
+        if (chordEl.checked) {
+          notes.splice(stringIndex, 1, index);
+          chordSelection(notes, element)
+        } else {
+          notes.splice(stringIndex, 1, index);
+          writeTab(notes);
+          fretboardClearSelection();
+          element.classList.add("selected");
+          notes = [null, null, null, null, null, null]
+        }
+      });
+    });
+  });
+  fretdivEl.appendChild(table);
+}
+buildFretboard("guitar")
+
+function fretboardSVG(el, y, alignment, vb) {
+  const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  const circleEl = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+  svgEl.setAttribute("viewBox", vb)
+  circleEl.setAttribute("cx", "50")
+  circleEl.setAttribute("cy", y)
+  circleEl.setAttribute("r", "40")
+  svgEl.append(circleEl)
+  el.classList.add("align-" + alignment)
+  el.append(svgEl)
+}
 
 function tuningNotes(tuningArr) {
   let allNotes = [
@@ -19,12 +117,13 @@ function tuningNotes(tuningArr) {
   tuningArr.reverse();
   let Arr = []
   allNotes.splice(0, capoEl.value)
+  // Adds fretboard notes based on tuningnotes then adds it to array
   for (let i = 0; i < tuningArr.length; i++) {
     let startIndex = allNotes.indexOf(tuningArr[i])
     let stringNoteArr = allNotes.slice(startIndex, startIndex+23) 
     Arr.push(...stringNoteArr)
   }
-  let fretboardArr = document.querySelectorAll(".guitar > tbody > tr > *[id]")
+  let fretboardArr = document.querySelectorAll(".instrument > tbody > tr > *[id]")
   // Remove old and add new eventlisteners
   fretboardArr.forEach((el, i) => {
     if (showNotesToggle) {
@@ -45,80 +144,93 @@ function tuningNotes(tuningArr) {
   });
 }
 
-// Add rows and cells
-for (var i = 0; i < 7; i++) {
-  let numberNames = ["first", "second", "third", "fourth", "fifth", "sixth"];
-  for (let l = 0; l < 6; l++) {
-    if (i == l+1) {
-      var stringname = numberNames[l];
-    }
-  };
-
-  var row = table.insertRow(i);
-  for (let j = 0; j < 23; j++) {
-    if (i === 0) {  // Table numbers, create th element for the first row
-      var th = document.createElement("th");
-      th.innerText = j;
-      row.appendChild(th);
-    } else {  // Frets
-      if (j === 0) {  // Create th element for the first column
-        var th = document.createElement("th");
-        th.id = stringname + j;
-        th.className = "string";
-        row.appendChild(th);
-        var element = th
-      } else {  // Create td element for other cells
-        let pEl = document.createElement("p")
-        var td = document.createElement("td");
-        td.id = stringname + j;
-        row.appendChild(td);
-        td.append(pEl)
-        if ((i==2 && j==12) || (i==5 && j==12)) {
-          fretboardSVG(td, 50, "center", "0 0 100 100")
-        } else if (i==3 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
-          fretboardSVG(td, 100, "bottom", "0 49 100 50")
-        } else if (i==4 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
-          fretboardSVG(td, 0, "top", "0 1 100 50")
-        }
-        var element = td
+function changeTuningNotes(el) {  // Changes the notes when tuning is changed
+  if (el != "") {
+    tuningEvent = !tuningEvent
+    if (currentInstrument == "guitar") { // Might be able to slice off the 3 last notes to become bass tunings, should look into it
+      if (el == "standard") {
+        tuningNotesArr = ["E2", "A2", "D3", "G3", "B3", "E4"]
+      } else if (el == "hStepUp") {
+        tuningNotesArr = ["F2", "Bb2", "Eb3", "Ab3", "C3", "F4"]
+      } else if (el == "hStepDown") {
+        tuningNotesArr = ["D2", "G2", "C3", "F3", "A3", "D4"]
+      } else if (el == "wStepDown") {
+        tuningNotesArr = ["C2", "F2", "Bb2", "Eb3", "G3", "C4"]
+      } else if (el == "dropA") {
+        tuningNotesArr = ["E2", "A2", "D3", "G3", "B3", "A3"]
+      } else if (el == "dropB") {
+        tuningNotesArr = ["Db2", "Gb2", "B2", "E3", "Ab3", "Db4"]
+      } else if (el == "dropC") {
+        tuningNotesArr = ["C2", "F2", "Bb2", "Eb3", "G3", "C4"]
+      } else if (el == "dropC#") {
+        tuningNotesArr = ["Db2", "Gb2", "B2", "E3", "Ab3", "Db4"]
+      } else if (el == "dropD") {
+        tuningNotesArr = ["D2", "G2", "C3", "F3", "A3", "D4"]
+      } else if (el == "openA") {
+        tuningNotesArr = ["E2", "A2", "Db3", "E3", "A3", "E4"]
+      } else if (el == "openC") {
+        tuningNotesArr = ["C2", "G2", "C3", "G3", "C3", "E4"]
+      } else if (el == "openC5") {
+        tuningNotesArr = ["C2", "G2", "C3", "G3", "C3", "C4"]
+      } else if (el == "openD") {
+        tuningNotesArr = ["D2", "A2", "D3", "Gb3", "A3", "D4"]
+      } else if (el == "openE") {
+        tuningNotesArr = ["E2", "B2", "E3", "Ab3", "B3", "E4"]
+      } else if (el == "openF") {
+        tuningNotesArr = ["F2", "C2", "F3", "A3", "C3", "F4"]
+      } else if (el == "openG") {
+        tuningNotesArr = ["D2", "G2", "D3", "G3", "B3", "D4"]
       }
-
-      for (let k = 0; k <= 6; k++) { // Push frets to string array
-        if (i == k) {
-          arrayArr[i-1].push(element)
-        }
-      };
+    } else if (currentInstrument == "bass") {
+      if (el == "standard") { // MISSING TUNINGS ATM
+        tuningNotesArr = ["E1", "A1", "D2", "G2"]
+      } else if (el == "hStepUp") {
+        tuningNotesArr = ["F1", "Bb1", "Eb2", "Ab2"]
+      } else if (el == "hStepDown") {
+        tuningNotesArr = ["D1", "G1", "C2", "F2"]
+      } else if (el == "wStepDown") {
+        tuningNotesArr = ["C1", "F1", "Bb1", "Eb2"]
+      } 
+    } else if (currentInstrument == "ukulele") {
+      if (el == "standard") {  // MISSING TUNINGS ATM
+        tuningNotesArr = ["E1", "A1", "D2", "G2"]
+      }     
     }
+    tuningArr = tuningNotesArr.map(el => el.slice(0, -1));
+    tuningNotes(tuningNotesArr);
   }
 }
 
-fretdivEl.appendChild(table);
-
-function fretboardSVG(el, y, alignment, vb) {
-  const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-  const circleEl = document.createElementNS("http://www.w3.org/2000/svg", "circle")
-  svgEl.setAttribute("viewBox", vb)
-  circleEl.setAttribute("cx", "50")
-  circleEl.setAttribute("cy", y)
-  circleEl.setAttribute("r", "40")
-  svgEl.append(circleEl)
-  el.classList.add("align-" + alignment)
-  el.append(svgEl)
+function chordSelection(chord, el) {  // Selects chord notes while writing it
+  let hadSelection = el.classList.contains("selected")
+  fretboardClearSelection()
+  for (let i = 0; i < chord.length; i++) {
+    if (chord[i] != null) {
+      if (hadSelection && el == arrayArr[i][chord[i]]) {
+        arrayArr[i][chord[i]].classList.remove("selected")
+        notes[i] = null
+      } else {
+        arrayArr[i][chord[i]].classList.add("selected")
+      }
+    }
+  };
 }
 
-arrayArr.forEach((stringArr, stringIndex) => {
-  stringArr.forEach((element, index) => {
-    element.addEventListener("click", () => {
-      if (chordEl.checked) {
-        notes.splice(stringIndex, 1, index);
-        chordSelection(notes)
-      } else {
-        notes.splice(stringIndex, 1, index);
-        writeTab(notes);
-        fretboardClearSelection();
-        element.classList.add("selected");
-        notes = [null, null, null, null, null, null]
-      }
-    });
+function selectString(string, type) {
+  arrayArr[string].forEach(el => {
+    if (type == "down") {
+      el.classList.add("selectedLight");
+    } else {
+      el.classList.remove("selectedLight");
+    }
   });
-});
+  if (type == "down") {
+    stringRowSel = string
+  } else {
+    stringRowSel = null
+  }
+}
+
+function fretboardClearSelection() {  // Unselects all
+  document.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+}

@@ -1,34 +1,120 @@
+#modal {
+  font-family: Roboto;
+  align-self: center;
+  justify-self: center;
+  height: 65vh;
+  width: 80vw;
+  background-color: hsl(var(--bg-color));
+
+  .modal-box {
+    display: grid;
+    padding: 10px;
+    height: 100%;
+    grid-template: 
+    "nav hed" 1fr
+    "nav set" 10fr
+    "nav btn" 1fr / 1fr 3fr;
+  }
+
+  h2 {
+    grid-area: hed;
+    text-align: center;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    row-gap: .5rem;
+    padding: 20px 0 20px 10px;
+    border: #888 2px solid;
+    border-radius: 15px;
+    grid-area: nav;
+  }
+
+  .settings-content {
+    grid-area: set;
+    padding: 40px;
+
+    .general, .appearance, .accessibility, .sound, .documentation {
+      display: grid;
+    }
+
+    select {
+      background-color: hsl(var(--font-color));
+      color: hsl(var(--bg-color));
+
+      option {
+        color: inherit;
+      }
+    }
+  }
+
+  .closeModal {
+    grid-area: btn;
+    background-color: hsl(var(--font-color));
+    color: hsl(var(--bg-color));
+    justify-self: end;
+    align-self: end;
+    width: 9ch;
+    font-size: 1.2rem;
+    padding: .5rem;
+    
+    &:hover { background-color: hsla(var(--light-accent), .75); }
+  }
+}
+
+nav > label {
+  border: none;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 10px 40px 10px 10px;
+  height: 40px;
+  border-left: 3px hsl(var(--light-accent)) ridge;
+}
+
+nav > label:has(input:checked) {
+  color: hsl(var(--bg-color));
+  background-image: linear-gradient(to right, hsl(var(--dark-accent)), hsla(var(--dark-accent), .1));
+  text-shadow: 0 0 0, 0 0 0, 1px 1px 0 hsl(var(--font-color)),
+    1px 1px 0 hsl(var(--font-color));
+}
+
+#modal::backdrop {
+  background: hsla(var(--dark-accent), .75);
+  opacity: 70%;
+}
+
 /* Fretboard div */
 .fretboard {
   grid-area: "fretboard";
-  display: flex;
-  justify-content: center;
+  display: flexbox;
+  justify-self: center;
+
+  table {
+    border-spacing: 0px;
+  }
 }
 
-table {
-  border-spacing: 0px;
+th, td {
+  width: clamp(.9rem, 6vmin, 3rem) !important;
+  height: clamp(.9rem, 6vmin, 3rem) !important;
 }
 
 th {
   text-align: center;
-  min-width: 3.6vw;
-  height: 3.6vw !important;
-  font-size: 2vw;
+  font-size: clamp(.5rem, 3vw, 1.7rem);
 }
 
 td {
   position: relative;
-  border: 1px var(--font-color) solid;
-  min-width: 3.6vw;
-  height: 3.6vw;
+  border: 1px hsl(var(--font-color)) solid;
 
   p {
     position: absolute;
-    color: var(--font-color) !important;
-    font-size: clamp(0.9rem, 2vw, 1.5rem);   
+    color: hsl(var(--font-color)) !important;
+    font-size: clamp(.9rem, 2vw, 1.5rem);   
     text-align: center;
-    left: 0;
-    right: 0;
+    inset: auto 0 auto 0;
     z-index: 9999;
   }
 
@@ -36,50 +122,114 @@ td {
     top: 50%;
     transform: translateY(-50%);
   }
+
+  &[class^="align-"] > svg {
+    fill: hsl(var(--font-color));
+  }
 }
 
 tr:nth-child(n+2) > th {
-  border: 1px var(--font-color) solid;
-  border-right: 5px var(--font-color) solid;
+  border: 1px hsl(var(--font-color)) solid;
+  border-right: 5px hsl(var(--font-color)) solid;
   border-left: none;
 }
 
 tr:nth-child(n+2) > th:hover, td:hover {
-  background-color: var(--light-color);
+  background-color: hsl(var(--light-accent));
 }
 
 .selected {
-  background-color: var(--dark-color);
-  color: var(--bg-color);
+  background-color: hsl(var(--dark-accent));
 
-  &:hover {
-    background-color: var(--dark-alpha-color);
+  p {  color: hsl(var(--bg-color)) !important; }
+  &:hover {  background-color: hsla(var(--dark-accent), .75); }
+}
+
+/* Output div */
+.output {
+  grid-area: "output";
+  display: grid;
+  position: relative;
+  padding: 10px;
+  white-space: nowrap;
+  overflow: auto;
+  border: 2px hsl(var(--font-color)) solid;
+  max-height: 30vh;
+  width: 90%;
+  align-self: center;
+  justify-self: center;
+  font-family: monospace;
+  -webkit-user-select: none;
+  user-select: none;
+
+  .actions {
+    display: inline-flex;
+    column-gap: 10px;
+    justify-content: end;
+    margin: 5px;
+    background-color: hsl(var(--bg-color));
+    z-index: 1;
+
+    svg:hover {
+      fill: hsl(var(--dark-accent));
+      cursor: pointer;
+    }
+  }
+
+  .clipboard, .clear {
+    height: 20px;
+    path {
+      pointer-events: all;
+    }
+  }
+
+  .tabSheet {
+    line-height: 1em;
+    width: 100%;
   }
 }
 
-.txtString > .note:hover, .txtString > .rest:hover {
-  cursor: pointer;
-  font-weight: 900;
-  background-color: var(--light-color);
-}
-
-.note.selected, .rest.selected {  animation: blink-select 1.4s infinite; }
-.txtString > span:not(.note):not(.rest) {  color: #888; }
-.sixth > .note, .sixth > .rest {  position: relative; }
-
-.sixth > .note::after, .sixth > .rest::after {
+[class^="section"] > br {
   content: "";
   display: block;
-  height: 15px;
-  width: 15px;
-  background-size: contain;
-  position: absolute;
-  left: 100%;
-  transform: translateX(-100%);
-  background-repeat: no-repeat;
-  filter: invert(var(--img-filter));
-  bottom: -15px;
+  height: 38px;
 }
+
+.tabSheet:has(.selected) > * > .txtString::after {
+  animation: none;
+}
+
+.active > .txtString::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  inset: 0 -7px auto auto;
+  height: 100%;
+  pointer-events: none; 
+  animation: blink-caret .7s infinite;
+}
+
+.txtString {
+  position: relative;
+  display: flex;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 20px;
+  line-height: 20px;
+
+  .note:hover, .rest:hover {
+    cursor: pointer;
+    font-weight: 900;
+    background-color: hsla(var(--light-accent), .5);
+  }
+
+  .note::after, .rest::after {
+    pointer-events: none;
+  }
+}
+
+.note.selected, .rest.selected {  animation: blink-select 3s infinite; }
+.sp {  color: hsla(var(--font-color), .3); }
 
 /* Notes */
 .sixth > .note.whole::after { background-image: url(../Images/WholeNote.png);}
@@ -94,47 +244,18 @@ tr:nth-child(n+2) > th:hover, td:hover {
 .sixth > .rest.eighth::after { background-image: url(../Images/EighthRest.png);}
 .sixth > .rest.sixteenth::after { background-image: url(../Images/SixteenthRest.png);}
 
-/* Output div */
-.output {
-  grid-area: "output";
-  padding: 10px;
-  display: inline-flex;
-  white-space: nowrap;
-  overflow: auto;
-  border: 2px var(--font-color) solid;
-  max-height: 40vh;
-  width: 90%;
-  align-self: center;
-  justify-self: center;
-  font-family: monospace;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.tabBox {
-  margin-bottom: 15px;
-  line-height: 1em;
-}
-
-.txtString {
+.sixth > .note, .sixth > .rest {
   position: relative;
 
-  .note::after {  pointer-events: none; }
-}
-
-.txtString:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: -3px;
-  width: 2px;
-  height: 100%;
-  pointer-events: none; 
-  animation: blink-caret 0.7s infinite;
-}
-
-/* Copy */
-#copy {
-  align-self: center;
-  justify-self: center;
+  &::after {
+    position: absolute;
+    content: "";
+    height: 25px;
+    width: 25px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    transform: translateX(-25%);
+    filter: invert(var(--img-filter));
+    inset: auto auto -25px 0;
+  }
 }

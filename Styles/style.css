@@ -1,15 +1,13 @@
-/* Variables */
+/* rgb(Variables */
 :root {
-  --font-color: #111;
-  --bg-color: #fff;
+  --font-color: 0, 0%, 7%;
+  --bg-color: 0, 0%, 93%;
   --bg-img: none;
   --bg-animation: none;
-  --light-color: hsl(118, 31%, 80%);
-  --dark-color: hsl(118, 24%, 24%);
-  --light-alpha-color: hsla(118, 24%, 34%, 0.75);
-  --dark-alpha-color: hsla(118, 24%, 24%, 0.75);
-  --border: hsl(118, 24%, 24%);
+  --light-accent: 118, 24%, 30%;
+  --dark-accent: 118, 24%, 24%;
   --img-filter: 0;
+  --color-rotation: hue-rotate(0deg);
 }
 
 body {
@@ -19,31 +17,75 @@ body {
   "main" 90vh / 1fr;
   width: 100%;
   min-height: 100vh;
-  background-color: var(--bg-color);
+  background-color: hsl(var(--bg-color));
   background-image: var(--bg-img);
   animation: var(--bg-animation);
   background-size: 200% 100%;
 }
 
+header {
+  grid-area: "head";
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-image: url(../Images/Banner.png);
+  filter: var(--color-rotation);
+  fill: hsl(var(--font-color));
+
+  .settings {
+    display: flex;
+    column-gap: 1.5em;
+    margin-right: 20px;
+
+    svg {
+      cursor: pointer;
+      fill: hsl(var(--bg-color)) !important;
+      filter: drop-shadow( 3px 3px hsl(var(--font-color)));
+      height: clamp(1.4rem, 3vw, 3rem);
+
+      &:hover {
+        fill: hsl(var(--light-accent)) !important;
+        transform: scale(1.1);
+        transition: transform ease-in-out .2s;
+      }
+    }
+  }
+
+  @media (max-width: 800px) {
+    .extra-text {
+      display: none;
+    }
+  }
+
+  @media (max-height: 1000px) {
+    .extra-text {
+      display: none;
+    }
+    header:has(.open) > span {
+      transition: opacity ease-out 500ms;
+      opacity: 0;
+    }
+  }
+}
+
+
 main {
   grid-area: "main";
   display: grid;
-  grid-template: 
-  "input" 2fr
+  grid-template:
+  "input" .7fr
   "fretboard" 2fr
-  "output" 2fr
-  "copy" 0.5fr / 1fr;
+  "output" .7fr / 1fr;
   row-gap: 10px;
 
-  @media (max-width: 600px) {
+  @media (max-width: 1000px) {
     grid-template: 
     "input" min-content
     "fretboard" min-content
-    "output" min-content
-    "copy" min-content / 1fr;
+    "output" min-content / 1fr;
 
-    @media (max-width: 400px) {
-      .guitar {
+    @media (max-width: 600px) {
+      .instrument {
         width: 100%;
       }
     }
@@ -51,25 +93,27 @@ main {
 }
 
 #settings { 
-  path {  pointer-events: stroke; }
+  path {  
+    pointer-events: fill;
+    cursor: pointer;
+  }
 
   &:hover {
     transform: rotate(60deg);
-    transition: ease-in-out 0.5s;
+    transition: transform ease-in-out .5s;
 
     path {
-      fill: var(--dark-color);
-      transition: ease-in-out 0.3s;
+      fill: hsl(var(--light-accent));
+      transition: linear .2s;
     }
   }
 
   &:not(:hover) {
     transform: rotate(0deg);
-    transition: ease-in-out 0.5s;
+    transition: tranform ease-in-out .5s;
 
     path {
-      fill: var(--font-color);
-      transition: ease-in-out 0.3s;
+      transition: linear .2s;
     }
   }
 }
@@ -80,11 +124,17 @@ main {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: hsl(var(--font-color));
 }
 
-html {  color: var(--font-color); }
-svg {  fill: var(--font-color); }
-h1 {  font-size: clamp(1.5rem, 3vw, 1.8rem); }
+html {  color: hsl(var(--font-color)); }
+
+h1 {  
+  font-size: clamp(1rem, 10vw, 3rem); 
+  line-height: 50px;
+  color: hsl(var(--bg-color));
+  text-shadow: 2px 4px hsl(var(--font-color));
+}
 
 h1, th, .input {
   -webkit-user-select: none;
@@ -98,6 +148,15 @@ p {
   user-select: none;
 }
 
+.preloader {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: color-mix(in srgb, hsl(var(--dark-accent)) 50%, hsl(var(--font-color)) 50%);
+  z-index: 11;
+}
+
 /* utility classes */
 
 .hidden {
@@ -109,17 +168,14 @@ p {
   opacity: 0;
 }
 
-.inv-text {  color: var(--bg-color) !important; }
-.bordered {  border: 2px var(--font-color) solid !important; }
-.border-color {  border: 2px var(--border) solid !important; }
-.selectedLight {  background-color: var(--light-alpha-color); }
+.inv-text {  color: hsl(var(--bg-color)) !important; }
+.bordered {  border: 2px hsl(var(--font-color)) solid !important; }
+.border-color {  border: 2px hsl(var(--dark-accent)) solid !important; }
+.selectedLight {  background-color: hsla(var(--light-accent), .75); }
 
-td[class^="align"] {
-
-  svg {
-    position: absolute;
-    z-index: 10;
-  }
+td[class^="align"] > svg {
+  position: absolute;
+  z-index: 10;
 }
 
 .align-bottom {
@@ -138,41 +194,59 @@ td[class^="align"] {
     transform: translateY(-50%);
   }
 
-  p {  color: var(--bg-color) !important; }
+  p {  color: hsl(var(--bg-color)) !important;}
+}
+
+.wave {
+  animation: wave 1s forwards;
 }
 
 /* Animations */
 /* Caret */
 @keyframes blink-caret {
-  0% {
-    background-color: var(--bg-color);
+  from {
+    background-color: hsl(var(--bg-color));
   }
   50% {
-    background-color: var(--dark-alpha-color);
+    background-color: hsla(var(--dark-accent), .75);
   }
-  100% {
-    background-color: var(--bg-color);
+  to {
+    background-color: hsl(var(--bg-color));
   }
 }
 
 /* Selected */
 @keyframes blink-select {
-  0% {
-    background-color: var(--bg-color);
-    color: var(--font-color);
+  from {
+    background-color: hsl(var(--font-color));
+    color: hsl(var(--bg-color));
   }
-  50% {
-    background-color: var(--dark-color);
-    color: var(--bg-color);
+  70% {
+    background-color: hsl(var(--font-color));
+    color: hsl(var(--bg-color));
   }
-  100% {
-    background-color: var(--dark-color);
-    color: var(--bg-color);
+  80% {
+    background-color: hsl(var(--bg-color));
+    color: hsl(var(--font-color));
+  }
+  to {
+    background-color: hsl(var(--font-color));
+    color: hsl(var(--bg-color));
   }
 }
 
-/* Rainbow */
+/* Rainbow background */
 @keyframes background-scroll {
   from {  background-position: 0% 0; }
   to {  background-position: 200% 0; }
+}
+
+/* Load animation */
+@keyframes wave {
+  from {
+    background-color: hsl(var(--dark-accent));
+  }
+  to {
+    background-color: hsl(var(--bg-color));
+  }
 }

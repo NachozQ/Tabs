@@ -1,78 +1,18 @@
-header {
-  grid-area: "head";
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-
-  .settings {
-    display: flex;
-    column-gap: 1.5em;
-
-    svg {
-      height: 2rem;
-      fill: var(--font-color);
-
-      &:hover {
-        fill: var(--light-color);
-        transform: scale(1.1);
-        transition: ease-in-out 0.5s;
-      }
-    }
-  }
-}
-
-/* Repeating styling */
-
-.settings > svg, 
-input[type="button"], 
-.input > div > * {  
-  cursor: pointer; 
-}
-
-.chord > input:checked + label,
-.noteLength > input:checked + label,
-.technique > input:checked + label {
-  border: 2px var(--border) solid !important;
-}
-
-header, 
-.input, 
-.playback, 
-.noteLength {
-  align-items: center;
-}
-
-.technique > label, 
-.noteLength > label, 
-.chord > label {
-  &:hover {
-    transform: scale(1.05);
-    background-color: var(--dark-alpha-color);
-  }
-}
-
 /* Input div */
-
-select {
-  background-color: var(--font-color);
+#tuning {
+  background-color: hsl(var(--font-color));
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   padding: 5px;
+  font-size: clamp(.8rem, 3vw, 2.5rem);
+  border-radius: 0;
 
-  * {
-    background-color: var(--font-color);
-    color: var(--bg-color);
+  &:focus {  
+    outline: none;
+    background-color: hsl(var(--dark-accent), .8);
   }
-
-  &:focus {  outline: none; }
-}
-
-input[type="button"] {
-  border-color: var(--font-color);
-  color: var(--border);
-  padding: 5px;
-  &:hover {  background-color: var(--light-alpha-color); }
+  * {  color: hsl(var(--bg-color)); }
 }
 
 .input {
@@ -81,33 +21,31 @@ input[type="button"] {
   -webkit-user-select: none;
   user-select: none;
   grid-template:
-  "tuning capo notelen" 1fr
-  "chord play tech" 1fr / 1fr 1fr 1fr;
+  "tuning play notelen" 1fr
+  "chord tech tech" 1fr / 1fr 1fr 1fr;
   gap: 10px 5px;
   margin: 10px;
-  transition: all 0.5s;
 
   .tuning, .chord { justify-self: start; }
   .playback { justify-self: center; }
   .noteLength, .technique { justify-self: end; }
+  svg {  fill: hsl(var(--font-color)); }
 
   @media (max-width: 600px) {
     grid-template:
-    "tuning capo" 1fr
-    "play notelen" 1fr
-    "chord tech" 1fr / 1fr 1fr;
+    "tuning play" 1fr
+    "tech tech" 1fr
+    "chord notelen" 1fr / 1fr 1fr;
     .playback { justify-self: start; }
-    .capo { justify-self: end; }
     @media (max-width: 400px) {
       row-gap: 9px;
       grid-template:
       "tuning" 1fr
-      "capo" 1fr
       "tech" 1fr
       "notelen" 1fr
-      "chord"
+      "chord" 1fr
       "play" 1fr / 1fr;
-      .tuning, .noteLength, .playback, .chord, .technique, .capo {
+      .tuning, .noteLength, .playback, .chord, .technique {
         width: 100%;
         justify-self: start;
       }
@@ -122,22 +60,30 @@ input[type="button"] {
 .playback {
   display: flex;
   grid-area: play;
-  padding-left: 15px;
   gap: 1rem;
+  font-size: clamp(.5rem, 2vw, 2rem);
 
-  #bpm {
-    outline: none;
-    border: none;
-    background-color: var(--font-color);
-    width: 6ch;
-    text-align: center;
-    height: 1.2rem;
-    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {  display: none; }
+  input, svg {
+    color: hsl(var(--font-color));
+    height: clamp(1rem, 4vw, 2.5rem);
+    width: clamp(4ch, 1vw, 5ch);
   }
 
-  svg {
-    height: 0.9rem;
-    width: 15px;
+  svg > path:hover {
+    fill: hsl(var(--dark-accent));
+  }
+  
+  input {
+    outline: none;
+    border: none;
+    background-color: hsla(var(--dark-accent), .3);
+    text-align: center;
+    font-size: clamp(1rem, 1vw, 2rem);
+    width: clamp(2.5rem, 2vw, 3rem);
+
+    &:focus {  font-weight: bolder; }
+    &:hover {  font-weight: bolder; }
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {  display: none; }
   }
 }
 
@@ -148,38 +94,23 @@ input[type="button"] {
 
   label {
     color: transparent;
-    height: 30px;
-    width: 30px;
+    height: clamp(1.3rem, 7vw, 4rem);
+    width: clamp(1.3rem, 7vw, 4rem);
     background-repeat: no-repeat;
     background-size: cover;
   }
 }
 
 .noteLength > input:checked + label {
-  background-color: var(--light-alpha-color);
+  background-color: hsla(var(--light-accent), .75);
   z-index: 1;
 
-  svg {  fill: var(--bg-color); }
-}
-
-.capo {
-  grid-area: capo;
-  justify-self: center;
-
-  #capo {
-    outline: none;
-    border: none;
-    background-color: var(--font-color);
-    width: 4ch;
-    text-align: center;
-    height: 18px;
-
-    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {  display: none; }
-  }
+  svg {  fill: hsl(var(--bg-color)); }
 }
 
 .chord { 
   grid-area: chord;
+  font-size: clamp(.8rem, 3vw, 2.5rem);
 
   .toggle {
     padding: 5px;
@@ -188,20 +119,75 @@ input[type="button"] {
 
 .chord > input:checked + label, 
 .technique > input:checked + label {
-  background-color: var(--light-alpha-color);
-  color: var(--bg-color);
+  background-color: hsla(var(--light-accent), .75);
+  color: hsl(var(--bg-color));
 }
 
 .technique {
   display: flex;
   grid-area: tech;
-  grid-template-columns: repeat(6, 1fr);
   gap: 3px 6px;
-  grid-auto-rows: auto;
 
   label {
-    justify-self: center;
-    border: 2px var(--font-color) solid;
-    padding: 2px 5px;
+    justify-self: end;
+    text-align: center;
+    height: clamp(1rem, 7vw, 3.5rem);
+    width: clamp(1rem, 7vw, 3.5rem);
+    font-size: clamp(.5rem, 4vw, 2rem);
+  }
+
+  svg {
+    fill: hsl(var(--font-color));
+    width: clamp(1rem, 4vw, 1.5rem);
+  }
+}
+
+.technique.expanded {
+  width: 100%;
+  gap: 1px 3px;
+  /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
+  justify-content: flex-end;
+
+  label {
+    height: clamp(1rem, 5vw, 2rem);
+    width: clamp(1rem, 5vw, 2rem);
+    font-size: clamp(.25rem, 2vw, 1rem);
+  }
+}
+
+/* Repeating styling */
+ 
+button, .input > div > * {
+  cursor: pointer;
+}
+
+.chord > label, 
+.noteLength > label,
+.technique > label {
+  border: 2px hsl(var(--font-color)) solid;
+}
+
+.chord > input:checked + label,
+.noteLength > input:checked + label,
+.technique > input:checked + label {  
+  border: 2px hsl(var(--dark-accent)) solid;
+}
+
+header, 
+.input, 
+.playback, 
+.noteLength {
+  align-items: center;
+}
+
+/* Scale will be it's own property soon */
+.technique, .noteLength, .chord {
+  label:hover {
+    transform: scale(1.05);
+    background-color: hsla(var(--dark-accent), .75);
+  }
+  svg:hover {
+    transform: scale(1.05);
+    fill: hsla(var(--dark-accent), .75);
   }
 }
