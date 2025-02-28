@@ -38,12 +38,11 @@ function removePrevActive() {
 
 function updateSection() {  // Updates tuning notes on tab text
   if (tuning.options[tuning.selectedIndex].value != "") {
-    tuningArr = tuningArr.reverse()
     let tabTuningArr = document.querySelectorAll(".active > .txtString > .tabTuning")
     // Add space if other notes include sharp or flat
     if (tuningArr.join("").includes("#") || tuningArr.join("").includes("b")) { 
       let indices = [];
-      tuningArr.forEach((element, index) => {
+      tuningArr.reverse().forEach((element, index) => {
         if (element.includes("#") || element.includes("b")) {
           indices.push(index);
         } else {
@@ -51,15 +50,12 @@ function updateSection() {  // Updates tuning notes on tab text
         }
       });
       for (let i = 0; i < tuningArr.length; i++) {
-        if (indices.includes(i)) { 
-          tabTuningArr[i].textContent = tuningArr[i] + "|"
-        } else { 
-          tabTuningArr[i].textContent = tuningArr[i] + " |"
-        }
+        var startLine = indices.includes(5-i) ? "|" : " |";
+        tabTuningArr[i].textContent = tuningArr[5-i] + startLine
       }
     } else { // No sharps or flats
       for (let i = 0; i < tuningArr.length; i++) {
-        tabTuningArr[i].textContent = tuningArr[i] + "|"
+        tabTuningArr[i].textContent = tuningArr[5-i] + "|"
       }
     }
   } 
@@ -109,6 +105,10 @@ function writeNote(note) {
   noteEl.classList.add(selectedNoteLen(), "note")
   noteEl.innerText = note
   noteEl.onclick = () => { noteSelection(noteEl)}
+  noteEl.ondblclick = () => { 
+    console.log("hello");
+    selectTabline([noteEl])
+  }
   tchnqArr.forEach(element => {
     if (element.checked && note != "-") {
       ending = ""
@@ -175,7 +175,7 @@ function writeTab(notes) { // Writes notes
   }
 
   beats += notelenChecked()
-  if (beats == 16) {
+  if (beats == 64) {
     endTab()
   }
   // Unchecks
@@ -219,7 +219,7 @@ function deleteTab() {
   }
 }
 
-function Space(note, start) { // 
+function Space(note, start) { 
   let space = ""
   if (spacing == "single" && start) {
     note++
@@ -257,16 +257,18 @@ function noteSelection(el) {  // Tab notes
   } else {
     let allSelected = document.querySelectorAll("span.selected")
     if (!shift) {
-      allSelected.forEach(span => span.classList.remove("selected"));
+      allSelected.forEach(span => {
+        span.classList.remove("selected");
+      });
+    } else {
+      allSelected.forEach(span => {
+        if (span !== el) {
+          span.classList.remove("selected")
+          void el.offsetWidth;
+          span.classList.add("selected")
+        }
+      });
     }
-
-    allSelected.forEach(span => {
-      if (span !== el) {
-        span.classList.remove("selected")
-        void el.offsetWidth;
-        span.classList.add("selected")
-      }
-    });
     el.classList.add("selected")
   }
   document.addEventListener("click", clickListener)
@@ -350,7 +352,7 @@ function handleTechniqueEdit(key, selectedNotes) {
   if (key === "x") {
     for (let i = 0; i < selectedNotes.length; i++) {
       selectedNotes[i].textContent = "x"; 
-    } 
+    }
   } else if (key === "d") {
     for (let i = 0; i < selectedNotes.length; i++) {
       selectedNotes[i].textContent = "\\" + selectedNotes[i].textContent;
@@ -367,7 +369,28 @@ function handleTechniqueEdit(key, selectedNotes) {
   }
 }
 
-/* Copy button */
+function selectTabline(notesArr) {
+  for (let i = 0; i < notesArr.length; i++) {
+    const element = notesArr[i];
+    let selnoteIndex = element.classList[2]
+    let colNotes = document.querySelectorAll(`span.${selnoteIndex}:not(.sp)`)
+    colNotes.forEach(el => {
+      el.classList.remove("selected")
+      void el.offsetWidth;
+      el.classList.add("selected")
+    });
+  }
+}
+
+/* Action buttons */
+function copyLegend() {
+  let result = "************************************\n\n| x   Dead note\n| g   Grace note\n| (n) Ghost note\n| h   Hammer-on\n| p   Pull-off\n| r   Release\n| >   Accented note\n| t   Tapping\n| b   Bend\n| br  Bend release\n| pb  Pre-bend\n| pbr Pre-bend release\n| /   Slide up\n| \\   Slide down\n| ~   Vibrato\n| s   Slap\n| P   Pop\n| PM  Palm mute\n| TR  Trill\n| N   Tremolo\n\n************************************"
+  let temptext = document.createElement("textarea");
+  temptext.value = result.trim();
+  temptext.select()
+  navigator.clipboard.writeText(temptext.value)
+}
+
 function clipboard() {
   let sections = document.querySelectorAll(".tabSheet > div")
   let result = "";

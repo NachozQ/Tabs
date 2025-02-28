@@ -1,9 +1,29 @@
 var shift = false
 var ctrl = false
 var alt = false
+var chordToggled = false
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Shift") {
+    if (chordToggleMode || !shift) {
+      fretboardClearSelection();
+      chordEl.checked = !chordEl.checked;
+
+      if ( !chordEl.checked && !isOnlyNull(notes)) {
+        writeTab(notes);
+        notes = [null, null, null, null, null, null];
+      }
+
+      // Update chordToggled only in toggle mode
+      if (chordToggleMode) {
+        chordToggled = !chordToggled;
+      }
+    }
+
+    // In hold mode, set shift to true and chordToggled to true
+    if (!chordToggleMode) {
+      chordToggled = true;
+    }
     shift = true;
   } else if (e.key === "Control") {
     ctrl = true;
@@ -60,32 +80,17 @@ document.addEventListener("keydown", (e) => {
         tappingEl.checked = !tappingEl.checked
         checkbox(tappingEl)
         break;
-      case "Alt":
-        fretboardClearSelection()
-        if (chordEl.checked == false) {
-          chordEl.checked = true
-        } else {
-          chordEl.checked = false
-          if (!isOnlyNull(notes)) {
-            writeTab(notes)
-            notes = [null, null, null, null, null, null];
-          }
+      case "a":
+        if (alt) {
+          document.querySelectorAll(".note, rest").forEach(el => {
+            el.classList.remove("selected")
+            void el.offsetWidth;
+            el.classList.add("selected")
+          });
         }
         break;
       case "|":  // | + 1-5 to access notelengths
-        document.addEventListener("keydown", (event) => {
-          if (event.key == "1") {
-            noteLenArr[0].checked = true
-          } else if (event.key == "2") {
-            noteLenArr[1].checked = true
-          } else if (event.key == "3") {
-            noteLenArr[2].checked = true
-          } else if (event.key == "4") {
-            noteLenArr[3].checked = true
-          } else if (event.key == "5") {
-            noteLenArr[4].checked = true
-          } 
-        });
+        document.addEventListener("keydown", handleNotelength);
         break;
       case "F1":
         selectString(0, "down")
@@ -137,7 +142,7 @@ document.addEventListener("keydown", (e) => {
         let colIndex = selArr[0].classList[2]
         let rowIndex = parseInt(selArr[0].classList[3].substring(1, 2)) + 1
         if (rowIndex < stringCount) {
-          let belowEl = document.querySelector("." + colIndex + ".s" + rowIndex + ":not(.sp)")
+          let belowEl = document.querySelector(`.${colIndex}.s${rowIndex}:not(.sp)`)
           selArr[0].classList.remove("selected")
           belowEl.classList.add("selected")
         }
@@ -154,7 +159,7 @@ document.addEventListener("keydown", (e) => {
         let colIndex = selArr[0].classList[2]
         let rowIndex = parseInt(selArr[0].classList[3].substring(1)) - 1
         if (rowIndex >= 0) {
-          let aboveEl = document.querySelector("." + colIndex + ".s" + rowIndex + ":not(.sp)")
+          let aboveEl = document.querySelector(`.${colIndex}.s${rowIndex}:not(.sp)`)
           selArr[0].classList.remove("selected")
           aboveEl.classList.add("selected")
         } 
@@ -164,7 +169,7 @@ document.addEventListener("keydown", (e) => {
       let rowIndex = selArr[0].classList[3]
 
       if (colIndex >= 0) {
-        let leftEl = document.querySelector(".i" + colIndex + "." + rowIndex + ":not(.sp)")
+        let leftEl = document.querySelector(`.i${colIndex}.${rowIndex}:not(.sp)`)
         selArr[0].classList.remove("selected")
         leftEl.classList.add("selected")
       }
@@ -173,9 +178,9 @@ document.addEventListener("keydown", (e) => {
       let rowIndex = selArr[0].classList[3]
 
       if (colIndex < tabNoteArr.length) {
-        let leftEl = document.querySelector(".i" + colIndex + "." + rowIndex + ":not(.sp)")
+        let rightEl = document.querySelector(`.i${colIndex}.${rowIndex}:not(.sp)`)
         selArr[0].classList.remove("selected")
-        leftEl.classList.add("selected")
+        rightEl.classList.add("selected")
       }
     } else if (e.key === "c" && ctrl) {
       let allTabnotes = document.querySelectorAll(".active > .txtString")
@@ -189,22 +194,10 @@ document.addEventListener("keydown", (e) => {
         }
       });
     } else if (e.key === "a") {
-      if (alt) {
-        document.querySelectorAll(".note, rest").forEach(el => {
-          el.classList.remove("selected")
-          void el.offsetWidth;
-          el.classList.add("selected")
-        });
-      } else if (ctrl) {
-        if (selArr.length == 1) {
-          let selnoteIndex = document.querySelector("span.selected").classList[2]
-          let colNotes = document.querySelectorAll("span." + selnoteIndex + ":not(.sp)")
-          colNotes.forEach(el => {
-            el.classList.remove("selected")
-            void el.offsetWidth;
-            el.classList.add("selected")
-          });
-        }
+      if (ctrl) {
+        selectTabline(selArr)
+      } else if (alt) {
+        
       }
     }
   }
@@ -212,7 +205,20 @@ document.addEventListener("keydown", (e) => {
 
 document.addEventListener("keyup", (e) => {
   if (e.key == "Shift") {
-    shift = false
+    shift = false;
+    if (!chordToggleMode) {
+      chordToggled = false;
+
+      // Untoggle the chord button and fire the function when Shift is released
+      if (chordEl.checked) {
+        chordEl.checked = false;
+
+        if (!isOnlyNull(notes)) {
+          writeTab(notes);
+          notes = [null, null, null, null, null, null];
+        }
+      }
+    }
   } else if (e.key == "Control") {
     ctrl = false
   } else if (e.key == "Alt") {
@@ -227,7 +233,26 @@ document.addEventListener("keyup", (e) => {
     selectString(3, "up")
   } else if (e.key == "F5") {
     selectString(4, "up")
-  } else if(e.key == "F6") {
+  } else if (e.key == "F6") {
     selectString(5, "up")
+  } else if (e.key == "|") {
+    document.removeEventListener("keydown", handleNotelength);
   }
 });
+
+function handleNotelength(event) {
+  if (event.key == "1") {
+    noteLenArr[0].checked = true;
+  } else if (event.key == "2") {
+    noteLenArr[1].checked = true;
+  } else if (event.key == "3") {
+    noteLenArr[2].checked = true;
+  } else if (event.key == "4") {
+    noteLenArr[3].checked = true;
+  } else if (event.key == "5") {
+    noteLenArr[4].checked = true;
+  }
+  
+  // Remove the event listener after it executes
+  // document.removeEventListener("keydown", handleNotelength);
+}

@@ -1,164 +1,86 @@
-/* rgb(Variables */
 :root {
   --font-color: 0, 0%, 7%;
   --bg-color: 0, 0%, 93%;
   --bg-img: none;
   --bg-animation: none;
-  --light-accent: 118, 24%, 30%;
-  --dark-accent: 118, 24%, 24%;
+  --primary-accent: 118, 24%, 30%;
+  --secondary-accent: 39, 100%, 50%;
   --img-filter: 0;
   --color-rotation: hue-rotate(0deg);
 }
 
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {  
+  color: hsl(var(--font-color));
+  font-family: system-ui, Roboto;
+}
+
+svg {  
+  fill: hsl(var(--font-color)); 
+}
+
+button, input, label, select, svg, th:not(.numbers), td {  
+  cursor: pointer;
+}
+
+h1, th, p, .input, .output, label {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 body {
   display: grid;
+  width: 100%;
+  min-height: 100vh;
   grid-template: 
   "head" 10vh
   "main" 90vh / 1fr;
-  width: 100%;
-  min-height: 100vh;
   background-color: hsl(var(--bg-color));
   background-image: var(--bg-img);
   animation: var(--bg-animation);
   background-size: 200% 100%;
 }
 
-header {
-  grid-area: "head";
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  background-image: url(../Images/Banner.png);
-  filter: var(--color-rotation);
-  fill: hsl(var(--font-color));
-
-  .settings {
-    display: flex;
-    column-gap: 1.5em;
-    margin-right: 20px;
-
-    svg {
-      cursor: pointer;
-      fill: hsl(var(--bg-color)) !important;
-      filter: drop-shadow( 3px 3px hsl(var(--font-color)));
-      height: clamp(1.4rem, 3vw, 3rem);
-
-      &:hover {
-        fill: hsl(var(--light-accent)) !important;
-        transform: scale(1.1);
-        transition: transform ease-in-out .2s;
-      }
-    }
-  }
-
-  @media (max-width: 800px) {
-    .extra-text {
-      display: none;
-    }
-  }
-
-  @media (max-height: 1000px) {
-    .extra-text {
-      display: none;
-    }
-    header:has(.open) > span {
-      transition: opacity ease-out 500ms;
-      opacity: 0;
-    }
-  }
-}
-
-
 main {
   grid-area: "main";
   display: grid;
+  max-height: 90vh;
   grid-template:
-  "input" .7fr
-  "fretboard" 2fr
-  "output" .7fr / 1fr;
-  row-gap: 10px;
+  "input" 18vh
+  "fretboard" 40vh
+  "output" 30vh / 1fr;
+  row-gap: 1vh;
 
   @media (max-width: 1000px) {
-    grid-template: 
+    grid-template:
     "input" min-content
     "fretboard" min-content
     "output" min-content / 1fr;
 
     @media (max-width: 600px) {
-      .instrument {
-        width: 100%;
-      }
+      /* Something probably */
     }
   }
-}
-
-#settings { 
-  path {  
-    pointer-events: fill;
-    cursor: pointer;
-  }
-
-  &:hover {
-    transform: rotate(60deg);
-    transition: transform ease-in-out .5s;
-
-    path {
-      fill: hsl(var(--light-accent));
-      transition: linear .2s;
-    }
-  }
-
-  &:not(:hover) {
-    transform: rotate(0deg);
-    transition: tranform ease-in-out .5s;
-
-    path {
-      transition: linear .2s;
-    }
-  }
-}
-
-/* Reset and base styles */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  color: hsl(var(--font-color));
-}
-
-html {  color: hsl(var(--font-color)); }
-
-h1 {  
-  font-size: clamp(1rem, 10vw, 3rem); 
-  line-height: 50px;
-  color: hsl(var(--bg-color));
-  text-shadow: 2px 4px hsl(var(--font-color));
-}
-
-h1, th, .input {
-  -webkit-user-select: none;
-  user-select: none;
-  font-family: system-ui, Roboto;
-}
-
-p {
-  font-family: monospace;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 .preloader {
   position: absolute;
-  inset: 0 auto auto 0;
+  transform: translateX(-50%);
+  inset: 0 auto auto 50%;
+  transition: height 300ms cubic-bezier(0.8, 0.4, 0.3, 0.1);
   width: 100vw;
   height: 100vh;
-  background-color: color-mix(in srgb, hsl(var(--dark-accent)) 50%, hsl(var(--font-color)) 50%);
+  background-color: color-mix(in srgb, hsl(var(--primary-accent)) 50%, hsl(var(--font-color)) 50%);
   z-index: 11;
 }
 
 /* utility classes */
-
 .hidden {
   margin: 0;
   padding: 0;
@@ -170,83 +92,12 @@ p {
 
 .inv-text {  color: hsl(var(--bg-color)) !important; }
 .bordered {  border: 2px hsl(var(--font-color)) solid !important; }
-.border-color {  border: 2px hsl(var(--dark-accent)) solid !important; }
-.selectedLight {  background-color: hsla(var(--light-accent), .75); }
+.bordered-accent {  border: 2px hsl(var(--secondary-accent)) solid !important; }
+.selectedLight {  background-color: hsla(var(--primary-accent), .25) !important; }
+.align-center {  align-items: center; }
 
-td[class^="align"] > svg {
-  position: absolute;
-  z-index: 10;
-}
-
-.align-bottom {
-  svg {  bottom: 0; }
-  p {  top: 0; }
-}
-
-.align-top {
-  svg {  top: 0; }
-  p {  bottom: 0; }
-}
-
-.align-center {
-  svg {
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  p {  color: hsl(var(--bg-color)) !important;}
-}
-
-.wave {
-  animation: wave 1s forwards;
-}
-
-/* Animations */
-/* Caret */
-@keyframes blink-caret {
-  from {
-    background-color: hsl(var(--bg-color));
-  }
-  50% {
-    background-color: hsla(var(--dark-accent), .75);
-  }
-  to {
-    background-color: hsl(var(--bg-color));
-  }
-}
-
-/* Selected */
-@keyframes blink-select {
-  from {
-    background-color: hsl(var(--font-color));
-    color: hsl(var(--bg-color));
-  }
-  70% {
-    background-color: hsl(var(--font-color));
-    color: hsl(var(--bg-color));
-  }
-  80% {
-    background-color: hsl(var(--bg-color));
-    color: hsl(var(--font-color));
-  }
-  to {
-    background-color: hsl(var(--font-color));
-    color: hsl(var(--bg-color));
-  }
-}
-
-/* Rainbow background */
+/* Rainbow background animation */
 @keyframes background-scroll {
   from {  background-position: 0% 0; }
   to {  background-position: 200% 0; }
-}
-
-/* Load animation */
-@keyframes wave {
-  from {
-    background-color: hsl(var(--dark-accent));
-  }
-  to {
-    background-color: hsl(var(--bg-color));
-  }
 }

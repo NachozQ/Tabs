@@ -1,0 +1,128 @@
+/* Fretboard div */
+.fretboard {
+  grid-area: "fretboard";
+  display: flexbox;
+  justify-self: center;
+  background-repeat: no-repeat;
+  background-size: 100% calc(60% / .7); /* 60% because of six strings */
+  background-position: bottom;
+
+  table {  border-spacing: 0px; }
+
+  th {
+    text-align: center;
+    font-size: clamp(.5rem, 3vw, 1.7rem);
+
+    &.string {  
+      color: white; 
+      background-color: hsl(0, 0%, 19%);
+    }
+  }
+
+  td {
+    background-color: hsl(0, 0%, 19%);
+    position: relative;
+    border-right: 3px rgb(182, 182, 182) ridge;
+    background-position: center;
+
+
+    p {
+      position: absolute;
+      font-size: clamp(.9rem, 2vw, 1.5rem);   
+      color: #f3f3f3;
+      text-align: center;
+      inset: auto 0 auto 0;
+      z-index: 12;
+    }
+
+    &:not(.fretmarker-bottom, .fretmarker-top) > p {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &[id^="first"] { background-image: url(../Images/String1.png); }
+    &[id^="second"] { background-image: url(../Images/String2.png); }
+    &[id^="third"] { background-image: url(../Images/String3.png); }
+    &[id^="fourth"] { background-image: url(../Images/String4.png); }
+    &[id^="fifth"] { background-image: url(../Images/String5.png); }
+    &[id^="sixth"] { background-image: url(../Images/String6.png); }
+  }
+
+  th, td {
+    width: calc(75vw / 23);
+    height: calc(75vw / 23);
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  @media (max-width: 1000px) {
+    th, td {
+      width: calc(95vmax / 23);
+      height: calc(95vmax / 23);  
+    }
+
+    @media (max-width: 600px) {
+      .instrument {  width: 100vw; }
+
+      th, td {
+        width: calc(100vw / 23);
+        height: calc(100vw / 23);  
+      }
+    }
+  }
+
+  tr:nth-child(n+2) > th {
+    border-right: 5px rgb(182, 182, 182) ridge;
+  }
+
+  tr:nth-child(n+2) > th:hover, td:hover {
+    background-color: hsla(var(--secondary-accent), .5);
+    font-weight: bold;
+  }
+
+  td[class^="fretmarker"] {
+    position: relative;
+    
+    p, svg { position: absolute; }
+
+    svg { 
+      z-index: 2; 
+      fill: #f3f3f3;
+    }
+
+    &.fretmarker-bottom {
+      svg {  
+        bottom: -50; 
+        pointer-events: none;
+      }
+      p {  top: 0; }
+    }
+
+    &.fretmarker-center {
+      svg {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      p {  color: #010101; }
+    }
+  }
+
+  tr:focus {
+    background-color: hsla(var(--secondary-accent), .75);
+    outline: none;
+  }
+}
+
+.selected {
+  background-color: hsl(var(--primary-accent)) !important;
+
+  &:hover {  background-color: hsla(var(--primary-accent), .25);}
+}
+
+/* Load animation for fretboard */
+.wave {  animation: wave 1s forwards; }
+
+@keyframes wave {
+  from {  background-color: hsl(var(--secondary-accent)); }
+  to {  background-color: none; }
+}

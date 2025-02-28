@@ -1,0 +1,143 @@
+/* Output div */
+.output {
+  grid-area: "output";
+  position: relative;
+  display: grid;
+  align-self: self-end;
+  justify-self: center;
+  padding: 10px;
+  margin-bottom: 1rem;
+  white-space: nowrap;
+  overflow: auto;
+  width: 90%;
+  max-height: 30vh;
+
+  .actions {
+    display: inline-flex;
+    column-gap: 10px;
+    justify-content: end;
+    margin: 5px;
+
+    svg:hover {  fill: hsl(var(--secondary-accent)); }
+    .legend:hover { color: hsl(var(--secondary-accent)); }
+
+    svg:hover, .legend:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  .clipboard, .clear {
+    height: 20px;
+    path {  pointer-events: all; }
+  }
+
+  .legend {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bold;
+    border: none;
+    background-color: hsl(var(--bg-color));
+    color: hsl(var(--font-color));
+  }
+
+  .tabSheet {
+    font-family: monospace;
+    line-height: 1em;
+    width: 100%;
+  }
+}
+
+[class^="section"] > br {
+  content: "";
+  display: block;
+  height: 38px;
+}
+
+.tabSheet:has(.selected) > * > .txtString::after {
+  animation: none;
+}
+
+.active > .txtString::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  inset: 0 -7px auto auto;
+  height: 100%;
+  pointer-events: none; 
+  animation: blink-caret .7s infinite;
+}
+
+.txtString {
+  position: relative;
+  display: flex;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 1.3rem;
+  line-height: 20px;
+
+  .note:hover, .rest:hover {
+    cursor: pointer;
+    font-weight: 900;
+    background-color: hsla(var(--primary-accent), .5);
+  }
+
+  .note::after, .rest::after {
+    pointer-events: none;
+  }
+}
+
+.note.selected, .rest.selected {  animation: blink-select 3s infinite; }
+.sp {  color: hsla(var(--font-color), .3); }
+
+/* Notes */
+.sixth > .note.whole::after { background-image: url(../Images/WholeNote.png);}
+.sixth > .note.half::after { background-image: url(../Images/HalfNote.png);}
+.sixth > .note.quarter::after { background-image: url(../Images/QuarterNote.png);}
+.sixth > .note.eighth::after { background-image: url(../Images/EighthNote.png);}
+.sixth > .note.sixteenth::after { background-image: url(../Images/SixteenthNote.png);}
+/* Rests */
+.sixth > .rest.whole::after { background-image: url(../Images/WholeRest.png);}
+.sixth > .rest.half::after { background-image: url(../Images/HalfRest.png);}
+.sixth > .rest.quarter::after { background-image: url(../Images/QuarterRest.png);}
+.sixth > .rest.eighth::after { background-image: url(../Images/EighthRest.png);}
+.sixth > .rest.sixteenth::after { background-image: url(../Images/SixteenthRest.png);}
+
+.sixth > .note, .sixth > .rest {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: "";
+    height: 1.6rem;
+    width: 1.6rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    transform: translateX(-25%);
+    filter: invert(var(--img-filter));
+    inset: auto auto -30px 0;
+  }
+}
+
+@keyframes blink-caret {
+  from {  background-color: hsl(var(--bg-color)); }
+  50% {  background-color: hsla(var(--secondary-accent), .75); }
+  to {  background-color: hsl(var(--bg-color)); }
+}
+
+@keyframes blink-select {
+  from {
+    background-color: hsl(var(--font-color));
+    color: hsl(var(--bg-color));
+  }
+  70% {
+    background-color: hsl(var(--font-color));
+    color: hsl(var(--bg-color));
+  }
+  80% {
+    background-color: hsl(var(--bg-color));
+    color: hsl(var(--font-color));
+  }
+  to {
+    background-color: hsl(var(--font-color));
+    color: hsl(var(--bg-color));
+  }
+}

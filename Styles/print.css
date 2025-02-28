@@ -1,0 +1,21 @@
+@media print {
+  .fretboard, .input, .actions, .settings, .txtString::after {  
+    display: none !important; 
+  }
+
+  body {
+    height: auto !important;
+  }
+  
+  main {
+    margin-top: 125px;
+    grid-template:
+    "output" 1fr / 1fr !important;
+  }
+
+  .output {
+    border: none !important;
+    max-height: min-content !important;
+    overflow: hidden !important;
+  }
+}

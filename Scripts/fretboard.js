@@ -1,8 +1,7 @@
 var arrayArr = [[], [], [], [], [], []];
 
 // Creation of fretboard
-function buildFretboard(instrument) {
-  // Create table element
+function buildFretboard(instrument) { // Max frets maybe?
   fretdivEl.textContent = ""
   var table = document.createElement("table");
   table.className = "instrument";
@@ -20,14 +19,15 @@ function buildFretboard(instrument) {
         var stringname = numberNames[l];
       }
     };
-
     var row = table.insertRow(i);
     for (let j = 0; j < 23; j++) {
       if (i === 0) {  // Table numbers, create th element for the first row
         var th = document.createElement("th");
-        th.innerText = j;
+        th.innerText = j + parseInt(capoEl.value)
+        th.classList.add("numbers")
         row.appendChild(th);
       } else {  // Frets
+        row.tabIndex = "0";
         if (j === 0) {  // Create th element for the first column
           var th = document.createElement("th");
           th.id = stringname + j;
@@ -43,22 +43,18 @@ function buildFretboard(instrument) {
           if (stringCount == 6) {
             if ((i==2 && j==12) || (i==5 && j==12)) {
               fretboardSVG(td, 50, "center", "0 0 100 100")
-            } else if (i==3 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
-              fretboardSVG(td, 100, "bottom", "0 49 100 50")
-            } else if (i==4 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
-              fretboardSVG(td, 0, "top", "0 1 100 50")
+            } else if ((j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21)) {
+              if (i==3) {
+                fretboardSVG(td, 100, "bottom", "0 49 100 100")
+              } else if (i==4) {
+                td.classList.add("fretmarker-top")
+              }
             }
           } else if (stringCount == 4) {
-            if (
-              i==2 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21) ||
-              i==1 && (j==12) ||
-              i==3 && (j==12)) {
-              fretboardSVG(td, 100, "bottom", "0 49 100 50")
-            } else if (
-              i==3 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21) ||
-              i==2 && (j==12) ||
-              i==4 && (j==12)) {
-              fretboardSVG(td, 0, "top", "0 1 100 50")
+            if (i==2 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21) || i==1 && (j==12) || i==3 && (j==12)) {
+              fretboardSVG(td, 100, "bottom", "0 49 100 100")
+            } else if (i==3 && (j==3 || j==5 || j==7 || j==9 || j==15 || j==17 || j==19 || j==21) || i==2 && (j==12) || i==4 && (j==12)) {
+              td.classList.add("fretmarker-top")
             }
           }
           var element = td
@@ -100,103 +96,76 @@ function fretboardSVG(el, y, alignment, vb) {
   circleEl.setAttribute("cy", y)
   circleEl.setAttribute("r", "40")
   svgEl.append(circleEl)
-  el.classList.add("align-" + alignment)
   el.append(svgEl)
+  el.classList.add(`fretmarker-${alignment}`)
 }
 
 function tuningNotes(tuningArr) {
   let allNotes = [
-    "A0", "Bb0", "B0", "C1", "Db1", "D1", "Eb1", "E1", "F1", "Gb1", "G1", "Ab1",
-    "A1", "Bb1", "B1", "C2", "Db2", "D2", "Eb2", "E2", "F2", "Gb2", "G2", "Ab2",
-    "A2", "Bb2", "B2", "C3", "Db3", "D3", "Eb3", "E3", "F3", "Gb3", "G3", "Ab3",
-    "A3", "Bb3", "B3", "C4", "Db4", "D4", "Eb4", "E4", "F4", "Gb4", "G4", "Ab4",
-    "A4", "Bb4", "B4", "C5", "Db5", "D5", "Eb5", "E5", "F5", "Gb5", "G5", "Ab5",
-    "A5", "Bb5", "B5", "C6", "Db6", "D6", "Eb6", "E6", "F6", "Gb6", "G6", "Ab6",
-    "A6", "Bb6", "B6", "C7", "Db7", "D7", "Eb7", "E7", "F7", "Gb7"
+    "A0", "A♯0", "B0", "C1", "C♯1", "D1", "D♯1", "E1", "F1", "F♯1", "G1", "G♯1",
+    "A1", "A♯1", "B1", "C2", "C♯2", "D2", "D♯2", "E2", "F2", "F♯2", "G2", "G♯2",
+    "A2", "A♯2", "B2", "C3", "C♯3", "D3", "D♯3", "E3", "F3", "F♯3", "G3", "G♯3",
+    "A3", "A♯3", "B3", "C4", "C♯4", "D4", "D♯4", "E4", "F4", "F♯4", "G4", "G♯4",
+    "A4", "A♯4", "B4", "C5", "C♯5", "D5", "D♯5", "E5", "F5", "F♯5", "G5", "G♯5",
+    "A5", "A♯5", "B5", "C6", "C♯6", "D6", "D♯6", "E6", "F6", "F♯6", "G6", "G♯6",
+    "A6", "A♯6", "B6", "C7", "C♯7", "D7", "D♯7", "E7", "F7", "F♯7"
   ];
-  tuningArr.reverse();
+  tuningArr = tuningArr.reverse(); // Why not work?
+
   let Arr = []
-  allNotes.splice(0, capoEl.value)
   // Adds fretboard notes based on tuningnotes then adds it to array
   for (let i = 0; i < tuningArr.length; i++) {
-    let startIndex = allNotes.indexOf(tuningArr[i])
+    let startIndex = allNotes.indexOf(tuningArr[i]) + parseInt(capoEl.value)
     let stringNoteArr = allNotes.slice(startIndex, startIndex+23) 
     Arr.push(...stringNoteArr)
   }
   let fretboardArr = document.querySelectorAll(".instrument > tbody > tr > *[id]")
-  // Remove old and add new eventlisteners
+  // Remove old and add new eventlisteners for sounds
   fretboardArr.forEach((el, i) => {
     if (showNotesToggle) {
       if (i!=0 && i!=23 && i!= 46 && i!= 69 && i!=92 && i!=115) {
         let pEl = el.querySelector("p")
         let str = Arr[i].slice(0, -1)
         pEl.textContent = str
-      }
+      } 
     } else {
       if (i!=0 && i!=23 && i!= 46 && i!= 69 && i!=92 && i!=115) {
         let pEl = el.querySelector("p")
         pEl.textContent = ""
+      } else {
+        // el.textContent = Arr[i].slice(0, -1)
       }
     }
     el.removeEventListener("click", el.eventListener);
     el.eventListener = () => playNote(Arr[i]);
     el.addEventListener("click", el.eventListener);
   });
+  // Animation
+  arrayArr.forEach((stringArray, stringIndex) => {
+    stringArray.forEach((cell, fretIndex) => {
+      let delay = fretIndex * 50 + stringIndex * 25
+      setTimeout(() => {
+        cell.classList.add("wave");
+        // Removes class after animation is done
+        setTimeout(() => {
+          cell.classList.remove("wave");
+        }, 1000);
+      }, delay); // Delay 
+    });
+  });
 }
 
 function changeTuningNotes(el) {  // Changes the notes when tuning is changed
   if (el != "") {
     tuningEvent = !tuningEvent
-    if (currentInstrument == "guitar") { // Might be able to slice off the 3 last notes to become bass tunings, should look into it
-      if (el == "standard") {
-        tuningNotesArr = ["E2", "A2", "D3", "G3", "B3", "E4"]
-      } else if (el == "hStepUp") {
-        tuningNotesArr = ["F2", "Bb2", "Eb3", "Ab3", "C3", "F4"]
-      } else if (el == "hStepDown") {
-        tuningNotesArr = ["D2", "G2", "C3", "F3", "A3", "D4"]
-      } else if (el == "wStepDown") {
-        tuningNotesArr = ["C2", "F2", "Bb2", "Eb3", "G3", "C4"]
-      } else if (el == "dropA") {
-        tuningNotesArr = ["E2", "A2", "D3", "G3", "B3", "A3"]
-      } else if (el == "dropB") {
-        tuningNotesArr = ["Db2", "Gb2", "B2", "E3", "Ab3", "Db4"]
-      } else if (el == "dropC") {
-        tuningNotesArr = ["C2", "F2", "Bb2", "Eb3", "G3", "C4"]
-      } else if (el == "dropC#") {
-        tuningNotesArr = ["Db2", "Gb2", "B2", "E3", "Ab3", "Db4"]
-      } else if (el == "dropD") {
-        tuningNotesArr = ["D2", "G2", "C3", "F3", "A3", "D4"]
-      } else if (el == "openA") {
-        tuningNotesArr = ["E2", "A2", "Db3", "E3", "A3", "E4"]
-      } else if (el == "openC") {
-        tuningNotesArr = ["C2", "G2", "C3", "G3", "C3", "E4"]
-      } else if (el == "openC5") {
-        tuningNotesArr = ["C2", "G2", "C3", "G3", "C3", "C4"]
-      } else if (el == "openD") {
-        tuningNotesArr = ["D2", "A2", "D3", "Gb3", "A3", "D4"]
-      } else if (el == "openE") {
-        tuningNotesArr = ["E2", "B2", "E3", "Ab3", "B3", "E4"]
-      } else if (el == "openF") {
-        tuningNotesArr = ["F2", "C2", "F3", "A3", "C3", "F4"]
-      } else if (el == "openG") {
-        tuningNotesArr = ["D2", "G2", "D3", "G3", "B3", "D4"]
-      }
+    if (currentInstrument == "guitar") {
+      tuningNotesArr = guitarTunings[el];
     } else if (currentInstrument == "bass") {
-      if (el == "standard") { // MISSING TUNINGS ATM
-        tuningNotesArr = ["E1", "A1", "D2", "G2"]
-      } else if (el == "hStepUp") {
-        tuningNotesArr = ["F1", "Bb1", "Eb2", "Ab2"]
-      } else if (el == "hStepDown") {
-        tuningNotesArr = ["D1", "G1", "C2", "F2"]
-      } else if (el == "wStepDown") {
-        tuningNotesArr = ["C1", "F1", "Bb1", "Eb2"]
-      } 
+      tuningNotesArr = bassTunings[el];
     } else if (currentInstrument == "ukulele") {
-      if (el == "standard") {  // MISSING TUNINGS ATM
-        tuningNotesArr = ["E1", "A1", "D2", "G2"]
-      }     
+      tuningNotesArr = ukuleleTunings[el];
     }
-    tuningArr = tuningNotesArr.map(el => el.slice(0, -1));
+    tuningArr = tuning.options[tuning.selectedIndex].title.split(" ");
     tuningNotes(tuningNotesArr);
   }
 }
@@ -232,5 +201,5 @@ function selectString(string, type) {
 }
 
 function fretboardClearSelection() {  // Unselects all
-  document.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+  document.querySelectorAll(".instrument > tbody > tr > .selected").forEach(el => el.classList.remove("selected"));
 }

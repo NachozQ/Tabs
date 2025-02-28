@@ -1,0 +1,124 @@
+#modal {
+  border: 2px hsl(var(--font-color)) solid;
+
+  .modal-box {
+    display: grid;
+    padding: 10px;
+    height: 100%;
+    width: 100%;
+    grid-template:
+    "nav hed" 1fr
+    "nav set" 10fr
+    "nav btn" 1fr / max-content 1fr;
+  }
+
+  h2 {
+    grid-area: hed;
+    text-align: center;
+  }
+
+  nav {
+    grid-area: nav;
+    display: flex;
+    flex-direction: column;
+    row-gap: .5rem;
+    padding: 20px 0 20px 10px;
+    border-right: 3px hsla(var(--font-color), .5) solid;
+
+    label {
+      width: -moz-fit-content;
+      min-width: 100%;
+      padding: 10px 25px 10px 10px;
+      height: 40px;
+      border-left: 3px hsl(var(--primary-accent)) solid;
+
+      &:has(input:checked) {
+        background-image: linear-gradient(to right, hsl(var(--primary-accent)), hsla(var(--primary-accent), .1));
+        font-weight: bold;
+      }
+    }
+  }
+
+  .settings-content {
+    grid-area: set;
+    accent-color: hsl(var(--primary-accent));
+    padding: 40px;
+    
+    .tab-content {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      height: max-content;
+
+      div {
+        display: flex;
+        flex-direction: column;
+
+        label {  padding: 5px; }
+        p, label:has(select) {  font-weight: bold;}
+        h6 { font-weight: normal; }
+
+        label:has(input[type="radio"]:checked) {
+          background-color: hsl(var(--primary-accent));
+          color: hsl(var(--bg-color));
+
+          &:after {
+            content: "<";
+            color: hsl(var(--bg-color));
+          }
+        }
+
+        .choice {
+          border: 2px hsl(var(--primary-accent)) solid;
+          width: max-content;
+        }
+
+        select {
+          background-color: hsl(var(--primary-accent));
+          padding: 5px;
+          font-size: clamp(1rem, 1vw, 1.5rem);
+          width: max-content;
+
+          option {  color: inherit; }
+        }
+      }
+    }
+
+    select:focus, select:hover { background-color: hsl(var(--secondary-accent)) !important;}
+    label:has(input):hover { background-color: hsl(var(--secondary-accent));}
+  }
+
+  .closeModal {
+    grid-area: btn;
+    background-color: hsl(var(--font-color));
+    color: hsl(var(--bg-color));
+    justify-self: end;
+    align-self: end;
+    width: 9ch;
+    font-size: 1.2rem;
+    padding: .5rem;
+
+    &:hover { background-color: hsla(var(--primary-accent), .75); }
+  }
+
+  #documentation {
+    table {  
+      border-spacing: 0px; 
+      grid-area: 1 / 1 / auto / span 2;
+    }
+
+    th, td {
+      border: 1px black solid;
+      text-align: center;
+      padding: 0.3rem;
+      width: 50%;
+    }
+  }
+
+  &::backdrop {
+    background-color: hsla(var(--primary-accent), .75);
+    opacity: 70%;
+  }
+}
+
+/* I will put a piano here too */
